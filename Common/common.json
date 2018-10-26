@@ -1,0 +1,93 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    // Azure Container Registry
+    "container_registry_name": {
+      "type": "string"
+    },
+    // Azure Key Vault
+    "key_vault_name": {
+      "type": "string"
+    },
+    "key_vault_sku": {
+      "allowedValues": [
+        "Standard",
+        "standard",
+        "Premium",
+        "premium"
+      ],
+      "defaultValue": "Standard",
+      "type": "string",
+      "metadata": {
+        "description": "SKU for the vault"
+      }
+    },
+    "key_vault_accessPolicies": {
+      "type": "array",
+      "defaultValue": [],
+      "metadata": {
+        "description": "The access policies defined for this vault."
+      }
+    },
+    "key_vault_tenant": {
+      "type": "string"
+    },
+    "key_vault_enabledForDeployment": {
+      "type": "bool"
+    },
+    "key_vault_enabledForTemplateDeployment": {
+      "type": "bool"
+    },
+    "key_vault_enabledForDiskEncryption": {
+      "type": "bool"
+    },
+    "key_vault_networkAcls": {
+      "type": "object",
+      "metadata": {
+        "description": "The network firewall defined for this vault."
+      }
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "comments": "Azure Container Registry",
+      "type": "Microsoft.ContainerRegistry/registries",
+      "sku": {
+        "name": "Basic",
+        "tier": "Basic"
+      },
+      "name": "[parameters('container_registry_name')]",
+      "apiVersion": "2017-10-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "Environment": "Common"
+      },
+      "scale": null,
+      "properties": {
+        "adminUserEnabled": true
+      },
+      "dependsOn": []
+    },
+    {
+      "comments": "Azure Key Vault",
+      "apiVersion": "2016-10-01",
+      "name": "[parameters('key_vault_name')]",
+      "location": "[resourceGroup().location]",
+      "type": "Microsoft.KeyVault/vaults",
+      "properties": {
+        "enabledForDeployment": "[parameters('key_vault_enabledForDeployment')]",
+        "enabledForTemplateDeployment": "[parameters('key_vault_enabledForTemplateDeployment')]",
+        "enabledForDiskEncryption": "[parameters('key_vault_enabledForDiskEncryption')]",
+        "accessPolicies": "[parameters('key_vault_accessPolicies')]",
+        "tenantId": "[parameters('key_vault_tenant')]",
+        "sku": {
+          "name": "[parameters('key_vault_sku')]",
+          "family": "A"
+        },
+        "networkAcls": "[parameters('key_vault_networkAcls')]"
+      }
+    }
+  ]
+}

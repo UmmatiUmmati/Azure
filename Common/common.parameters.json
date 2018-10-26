@@ -1,0 +1,84 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    // Azure Container Registry
+    "container_registry_name": {
+      "value": "ummati"
+    },
+    // Azure Key Vault
+    "key_vault_name": {
+      "value": "ummati"
+    },
+    "key_vault_sku": {
+      "value": "Standard"
+    },
+    "key_vault_accessPolicies": {
+      "value": [
+        {
+          "objectId": "52eab0d8-353a-4efe-b6f6-2ee9cfbe1e17",
+          "tenantId": "7d8ca406-ffc4-41d6-ae03-a297a0943b62",
+          "permissions": {
+            "keys": [
+              "Get",
+              "List",
+              "Update",
+              "Create",
+              "Import",
+              "Delete",
+              "Recover",
+              "Backup",
+              "Restore"
+            ],
+            "secrets": [
+              "Get",
+              "List",
+              "Set",
+              "Delete",
+              "Recover",
+              "Backup",
+              "Restore"
+            ],
+            "certificates": [
+              "Get",
+              "List",
+              "Update",
+              "Create",
+              "Import",
+              "Delete",
+              "Recover",
+              "Backup",
+              "Restore",
+              "ManageContacts",
+              "ManageIssuers",
+              "GetIssuers",
+              "ListIssuers",
+              "SetIssuers",
+              "DeleteIssuers"
+            ]
+          }
+        }
+      ]
+    },
+    "key_vault_tenant": {
+      "value": "7d8ca406-ffc4-41d6-ae03-a297a0943b62"
+    },
+    "key_vault_enabledForDeployment": {
+      "value": false
+    },
+    "key_vault_enabledForTemplateDeployment": {
+      "value": true
+    },
+    "key_vault_enabledForDiskEncryption": {
+      "value": false
+    },
+    "key_vault_networkAcls": {
+      "value": {
+        "defaultAction": "Allow",
+        "bypass": "AzureServices",
+        "virtualNetworkRules": [],
+        "ipRules": []
+      }
+    }
+  }
+}
