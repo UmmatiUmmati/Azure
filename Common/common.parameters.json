@@ -76,6 +76,9 @@
     // Azure Container Registry
     "container_registry_name": {
       "value": "ummati"
+    },
+    "container_registry_sku": {
+      "value": "basic"
     }
   }
 }

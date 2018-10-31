@@ -70,6 +70,21 @@
         "description": "The location of the container registry resource."
       },
       "type": "string"
+    },
+    "container_registry_sku": {
+      "allowedValues": [
+        "Basic",
+        "basic",
+        "Standard",
+        "standard",
+        "Premium",
+        "premium"
+      ],
+      "defaultValue": "basic",
+      "metadata": {
+        "description": "SKU for the container registry"
+      },
+      "type": "string"
     }
   },
   "variables": {},
@@ -156,8 +171,8 @@
       "comments": "Azure Container Registry",
       "type": "Microsoft.ContainerRegistry/registries",
       "sku": {
-        "name": "Basic",
-        "tier": "Basic"
+        "name": "[parameters('container_registry_sku')]",
+        "tier": "[parameters('container_registry_sku')]"
       },
       "name": "[parameters('container_registry_name')]",
       "apiVersion": "2017-10-01",
