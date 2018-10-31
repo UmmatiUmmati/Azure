@@ -9,58 +9,51 @@
     "key_vault_name": {
       "value": "ummati-production"
     },
-    "key_vault_sku": {
-      "value": "standard"
+    "key_vault_objectId": {
+      "value": "52eab0d8-353a-4efe-b6f6-2ee9cfbe1e17"
     },
-    "key_vault_accessPolicies": {
+    "key_vault_certificatesPermissions": {
       "value": [
-        {
-          "objectId": "52eab0d8-353a-4efe-b6f6-2ee9cfbe1e17",
-          "tenantId": "7d8ca406-ffc4-41d6-ae03-a297a0943b62",
-          "permissions": {
-            "keys": [
-              "Get",
-              "List",
-              "Update",
-              "Create",
-              "Import",
-              "Delete",
-              "Recover",
-              "Backup",
-              "Restore"
-            ],
-            "secrets": [
-              "Get",
-              "List",
-              "Set",
-              "Delete",
-              "Recover",
-              "Backup",
-              "Restore"
-            ],
-            "certificates": [
-              "Get",
-              "List",
-              "Update",
-              "Create",
-              "Import",
-              "Delete",
-              "Recover",
-              "Backup",
-              "Restore",
-              "ManageContacts",
-              "ManageIssuers",
-              "GetIssuers",
-              "ListIssuers",
-              "SetIssuers",
-              "DeleteIssuers"
-            ]
-          }
-        }
+        "Get",
+        "List",
+        "Update",
+        "Create",
+        "Import",
+        "Delete",
+        "Recover",
+        "Backup",
+        "Restore",
+        "ManageContacts",
+        "ManageIssuers",
+        "GetIssuers",
+        "ListIssuers",
+        "SetIssuers",
+        "DeleteIssuers"
       ]
     },
-    "key_vault_enabledForTemplateDeployment": {
-      "value": true
+    "key_vault_keysPermissions": {
+      "value": [
+        "Get",
+        "List",
+        "Update",
+        "Create",
+        "Import",
+        "Delete",
+        "Recover",
+        "Backup",
+        "Restore"
+      ]
+    },
+    "key_vault_secretsPermissions": {
+      "value": [
+        "Get",
+        "List",
+        "Set",
+        "Delete",
+        "Recover",
+        "Backup",
+        "Restore"
+      ]
     },
     "key_vault_networkAcls": {
       "value": {
@@ -69,6 +62,12 @@
         "virtualNetworkRules": [],
         "ipRules": []
       }
+    },
+    "key_vault_sku": {
+      "value": "Standard"
+    },
+    "key_vault_enabledForTemplateDeployment": {
+      "value": true
     },
     // Azure Kubernetes Service
     "kubernetes_name": {
