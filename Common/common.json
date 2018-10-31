@@ -43,12 +43,15 @@
       "type": "string"
     },
     "key_vault_enabledForDeployment": {
+      "defaultValue": false,
       "type": "bool"
     },
     "key_vault_enabledForTemplateDeployment": {
+      "defaultValue": false,
       "type": "bool"
     },
     "key_vault_enabledForDiskEncryption": {
+      "defaultValue": false,
       "type": "bool"
     },
     "key_vault_networkAcls": {
