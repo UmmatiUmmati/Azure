@@ -1,8 +1,287 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
-  "parameters": {},
-  "variables": {},
-  "resources": [],
-  "outputs": {}
+  "parameters": {
+    "environment": {
+      "metadata": {
+        "description": "The name of the environment."
+      },
+      "type": "string"
+    },
+    // Azure Kubernetes Service
+    "aks_name": {
+      "metadata": {
+        "description": "The name of the Managed Cluster resource."
+      },
+      "type": "string"
+    },
+    "aks_location": {
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "The location of AKS resource."
+      },
+      "type": "string"
+    },
+    "aks_dnsPrefix": {
+      "metadata": {
+        "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
+      },
+      "type": "string"
+    },
+    "aks_osDiskSizeGB": {
+      "defaultValue": 0,
+      "metadata": {
+        "description": "Disk size (in GB) to provision for each of the agent pool nodes. This value ranges from 0 to 1023. Specifying 0 will apply the default disk size for that agentVMSize."
+      },
+      "maxValue": 1023,
+      "minValue": 0,
+      "type": "int"
+    },
+    "aks_osType": {
+      "allowedValues": [
+        "Linux"
+      ],
+      "defaultValue": "Linux",
+      "metadata": {
+        "description": "The type of operating system."
+      },
+      "type": "string"
+    },
+    "aks_agentCount": {
+      "defaultValue": 3,
+      "metadata": {
+        "description": "The number of agent nodes for the cluster."
+      },
+      "maxValue": 50,
+      "minValue": 1,
+      "type": "int"
+    },
+    "aks_agentVMSize": {
+      "defaultValue": "Standard_D2_v2",
+      "metadata": {
+        "description": "The size of the Virtual Machine."
+      },
+      "type": "string"
+    },
+    "aks_maxPods": {
+      "defaultValue": 30,
+      "metadata": {
+        "description": "Maximum number of pods that can run on a node."
+      },
+      "type": "int"
+    },
+    "aks_servicePrincipalClientId": {
+      "defaultValue": null,
+      "metadata": {
+        "description": "Client ID (used by cloudprovider)"
+      },
+      "type": "securestring"
+    },
+    "aks_servicePrincipalClientSecret": {
+      "defaultValue": null,
+      "metadata": {
+        "description": "The Service Principal Client Secret."
+      },
+      "type": "securestring"
+    },
+    "aks_kubernetesVersion": {
+      "defaultValue": "1.7.7",
+      "metadata": {
+        "description": "The version of Kubernetes."
+      },
+      "type": "string"
+    },
+    "aks_enableHttpApplicationRouting": {
+      "defaultValue": false,
+      "metadata": {
+        "description": "boolean flag to turn on and off of http application routing"
+      },
+      "type": "bool"
+    },
+    "aks_networkPlugin": {
+      "allowedValues": [
+        "azure",
+        "kubenet"
+      ],
+      "defaultValue": "kubenet",
+      "metadata": {
+        "description": "Network plugin used for building Kubernetes network."
+      },
+      "type": "string"
+    },
+    "aks_enableRBAC": {
+      "defaultValue": true,
+      "metadata": {
+        "description": "boolean flag to turn on and off of RBAC"
+      },
+      "type": "bool"
+    },
+    "aks_enableOmsAgent": {
+      "defaultValue": true,
+      "metadata": {
+        "description": "boolean flag to turn on and off of omsagent addon"
+      },
+      "type": "bool"
+    },
+    // Azure Log Analytics
+    "log_analytics_location": {
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Specify the region for your OMS workspace"
+      },
+      "type": "string"
+    },
+    "log_analytics_workspaceName": {
+      "metadata": {
+        "description": "Specify the name of the OMS workspace"
+      },
+      "type": "string"
+    },
+    "log_analytics_workspaceId": {
+      "metadata": {
+        "description": "Specify the resource id of the OMS workspace"
+      },
+      "type": "string"
+    },
+    "log_analytics_sku": {
+      "allowedValues": [
+        "free",
+        "standalone",
+        "pernode"
+      ],
+      "defaultValue": "free",
+      "metadata": {
+        "description": "Select the SKU for your workspace"
+      },
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "comments": "Azure Kubernetes Service",
+      "apiVersion": "2018-03-31",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'WorkspaceDeployment')]"
+      ],
+      "type": "Microsoft.ContainerService/managedClusters",
+      "location": "[parameters('aks_location')]",
+      "name": "[parameters('aks_name')]",
+      "properties": {
+        "kubernetesVersion": "[parameters('aks_kubernetesVersion')]",
+        "enableRBAC": "[parameters('aks_enableRBAC')]",
+        "dnsPrefix": "[parameters('aks_dnsPrefix')]",
+        "addonProfiles": {
+          "httpApplicationRouting": {
+            "enabled": "[parameters('aks_enableHttpApplicationRouting')]"
+          },
+          "omsagent": {
+            "enabled": "[parameters('aks_enableOmsAgent')]",
+            "config": {
+              "logAnalyticsWorkspaceResourceID": "[parameters('log_analytics_workspaceId')]"
+            }
+          }
+        },
+        "agentPoolProfiles": [
+          {
+            "name": "agentpool",
+            "osDiskSizeGB": "[parameters('aks_osDiskSizeGB')]",
+            "osType": "[parameters('aks_osType')]",
+            "count": "[parameters('aks_agentCount')]",
+            "vmSize": "[parameters('aks_agentVMSize')]",
+            "storageProfile": "ManagedDisks",
+            "maxPods": "[parameters('aks_maxPods')]"
+          }
+        ],
+        "servicePrincipalProfile": {
+          "ClientId": "[parameters('aks_servicePrincipalClientId')]",
+          "Secret": "[parameters('aks_servicePrincipalClientSecret')]"
+        },
+        "networkProfile": {
+          "networkPlugin": "[parameters('aks_networkPlugin')]"
+        }
+      },
+      "tags": {
+        "Environment": "[parameters('environment')]"
+      }
+    },
+    {
+      "comments": "Azure Log Analytics (Container Insights)",
+      "type": "Microsoft.Resources/deployments",
+      "name": "SolutionDeployment",
+      "apiVersion": "2017-05-10",
+      "resourceGroup": "[split(parameters('log_analytics_workspaceId'),'/')[4]]",
+      "subscriptionId": "[split(parameters('log_analytics_workspaceId'),'/')[2]]",
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {},
+          "variables": {},
+          "resources": [
+            {
+              "apiVersion": "2015-11-01-preview",
+              "type": "Microsoft.OperationsManagement/solutions",
+              "location": "[parameters('log_analytics_location')]",
+              "name": "[concat('ContainerInsights', '(', split(parameters('log_analytics_workspaceId'),'/')[8], ')')]",
+              "properties": {
+                "workspaceResourceId": "[parameters('log_analytics_workspaceId')]"
+              },
+              "plan": {
+                "name": "[concat('ContainerInsights', '(', split(parameters('log_analytics_workspaceId'),'/')[8], ')')]",
+                "product": "[concat('OMSGallery/', 'ContainerInsights')]",
+                "promotionCode": "",
+                "publisher": "Microsoft"
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'WorkspaceDeployment')]"
+      ],
+      "tags": {
+        "Environment": "[parameters('environment')]"
+      }
+    },
+    {
+      "comments": "Azure Log Analytics",
+      "type": "Microsoft.Resources/deployments",
+      "name": "WorkspaceDeployment",
+      "apiVersion": "2017-05-10",
+      "resourceGroup": "[split(parameters('log_analytics_workspaceId'),'/')[4]]",
+      "subscriptionId": "[split(parameters('log_analytics_workspaceId'),'/')[2]]",
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {},
+          "variables": {},
+          "resources": [
+            {
+              "apiVersion": "2015-11-01-preview",
+              "type": "Microsoft.OperationalInsights/workspaces",
+              "location": "[parameters('log_analytics_location')]",
+              "name": "[parameters('log_analytics_workspaceName')]",
+              "properties": {
+                "sku": {
+                  "name": "[parameters('log_analytics_sku')]"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "tags": {
+        "Environment": "[parameters('environment')]"
+      }
+    }
+  ],
+  "outputs": {
+    "controlPlaneFQDN": {
+      "type": "string",
+      "value": "[reference(concat('Microsoft.ContainerService/managedClusters/', parameters('aks_name'))).fqdn]"
+    }
+  }
 }

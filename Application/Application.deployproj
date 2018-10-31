@@ -25,7 +25,7 @@
   <ItemGroup>
     <Content Include="application.json" />
     <Content Include="production.parameters.json" />
-    <Content Include="test.parameters.json" />
+    <Content Include="staging.parameters.json" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
