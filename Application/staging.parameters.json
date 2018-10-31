@@ -2,5 +2,43 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "environment": {
+      "value": "Staging"
+    },
+    // Azure Kubernetes Service
+    "aks_name": {
+      "value": "ummati-staging"
+    },
+    "aks_dnsPrefix": {
+      "value": "ummati-staging"
+    },
+    "aks_osDiskSizeGB": {
+      "value": 5
+    },
+    "aks_agentCount": {
+      "value": 1
+    },
+    "aks_agentVMSize": {
+      "value": "Standard_B2s"
+    },
+    "aks_maxPods": {
+      "value": 30
+    },
+    "aks_kubernetesVersion": {
+      "value": "1.11.3"
+    },
+    "aks_enableRBAC": {
+      "value": true
+    },
+    // Azure Log Analytics
+    "log_analytics_workspaceName": {
+      "value": "ummati-staging"
+    },
+    "log_analytics_workspaceId": {
+      "value": "/subscriptions/dc01c77f-7452-4828-b574-3330cfbc06df/resourceGroups/DefaultResourceGroup-WEU/providers/Microsoft.OperationalInsights/workspaces/ummati-staging"
+    },
+    "log_analytics_sku": {
+      "value": "free"
+    }
   }
 }
