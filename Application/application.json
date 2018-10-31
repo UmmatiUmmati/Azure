@@ -136,6 +136,15 @@
       },
       "type": "string"
     },
+    "kubernetes_agentCount": {
+      "defaultValue": 3,
+      "metadata": {
+        "description": "The number of agents for the cluster."
+      },
+      "maxValue": 50,
+      "minValue": 1,
+      "type": "int"
+    },
     "kubernetes_osDiskSizeGB": {
       "defaultValue": 0,
       "metadata": {
@@ -155,15 +164,6 @@
       },
       "type": "string"
     },
-    "kubernetes_agentCount": {
-      "defaultValue": 3,
-      "metadata": {
-        "description": "The number of agent nodes for the cluster."
-      },
-      "maxValue": 50,
-      "minValue": 1,
-      "type": "int"
-    },
     "kubernetes_agentVMSize": {
       "defaultValue": "Standard_D2_v2",
       "metadata": {
@@ -179,7 +179,7 @@
       "type": "int"
     },
     "kubernetes_kubernetesVersion": {
-      "defaultValue": "1.7.7",
+      "defaultValue": "1.11.3",
       "metadata": {
         "description": "The version of Kubernetes."
       },
@@ -204,14 +204,14 @@
       "metadata": {
         "description": "Client ID (used by cloudprovider)"
       },
-      "type": "string"
+      "type": "securestring"
     },
     "kubernetes_servicePrincipalClientSecret": {
       "defaultValue": null,
       "metadata": {
         "description": "The Service Principal Client Secret."
       },
-      "type": "string"
+      "type": "securestring"
     },
     "kubernetes_networkPlugin": {
       "allowedValues": [
@@ -300,17 +300,17 @@
     },
     {
       "comments": "Azure Kubernetes Service",
+      "type": "Microsoft.ContainerService/managedClusters",
+      "name": "[parameters('kubernetes_name')]",
       "apiVersion": "2018-03-31",
+      "location": "[parameters('kubernetes_location')]",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'WorkspaceDeployment')]"
       ],
-      "type": "Microsoft.ContainerService/managedClusters",
-      "location": "[parameters('kubernetes_location')]",
-      "name": "[parameters('kubernetes_name')]",
       "properties": {
         "kubernetesVersion": "[parameters('kubernetes_kubernetesVersion')]",
-        "enableRBAC": "[parameters('kubernetes_enableRBAC')]",
         "dnsPrefix": "[parameters('kubernetes_dnsPrefix')]",
+        "enableRBAC": "[parameters('kubernetes_enableRBAC')]",
         "addonProfiles": {
           "httpApplicationRouting": {
             "enabled": "[parameters('kubernetes_enableHttpApplicationRouting')]"
@@ -325,9 +325,9 @@
         "agentPoolProfiles": [
           {
             "name": "agentpool",
+            "count": "[parameters('kubernetes_agentCount')]",
             "osDiskSizeGB": "[parameters('kubernetes_osDiskSizeGB')]",
             "osType": "[parameters('kubernetes_osType')]",
-            "count": "[parameters('kubernetes_agentCount')]",
             "vmSize": "[parameters('kubernetes_agentVMSize')]",
             "storageProfile": "ManagedDisks",
             "maxPods": "[parameters('kubernetes_maxPods')]"
