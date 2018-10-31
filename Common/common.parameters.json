@@ -59,9 +59,6 @@
         }
       ]
     },
-    "key_vault_tenant": {
-      "value": "7d8ca406-ffc4-41d6-ae03-a297a0943b62"
-    },
     "key_vault_enabledForTemplateDeployment": {
       "value": true
     },

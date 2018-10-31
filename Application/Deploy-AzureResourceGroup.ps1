@@ -2,13 +2,13 @@
 
 Param(
     [string] [Parameter(Mandatory=$true)] $ResourceGroupLocation,
-    [string] $ResourceGroupName = 'Ummati-Test-WestEurope',
-    [HashTable] $ResourceGroupTags = @{ "Environment" = "Test" },
+    [string] $ResourceGroupName = 'Ummati-Staging-WestEurope',
+    [HashTable] $ResourceGroupTags = @{ "Environment" = "Staging" },
     [switch] $UploadArtifacts,
     [string] $StorageAccountName,
     [string] $StorageContainerName = $ResourceGroupName.ToLowerInvariant() + '-stageartifacts',
     [string] $TemplateFile = 'application.json',
-    [string] $TemplateParametersFile = 'test.parameters.json',
+    [string] $TemplateParametersFile = 'staging.parameters.json',
     [string] $ArtifactStagingDirectory = '.',
     [string] $DSCSourceFolder = 'DSC',
     [switch] $ValidateOnly

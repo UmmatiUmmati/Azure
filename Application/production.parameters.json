@@ -5,30 +5,115 @@
     "environment": {
       "value": "Production"
     },
+    // Azure Key Vault
+    "key_vault_name": {
+      "value": "ummati-production"
+    },
+    "key_vault_sku": {
+      "value": "standard"
+    },
+    "key_vault_accessPolicies": {
+      "value": [
+        {
+          "objectId": "52eab0d8-353a-4efe-b6f6-2ee9cfbe1e17",
+          "tenantId": "7d8ca406-ffc4-41d6-ae03-a297a0943b62",
+          "permissions": {
+            "keys": [
+              "Get",
+              "List",
+              "Update",
+              "Create",
+              "Import",
+              "Delete",
+              "Recover",
+              "Backup",
+              "Restore"
+            ],
+            "secrets": [
+              "Get",
+              "List",
+              "Set",
+              "Delete",
+              "Recover",
+              "Backup",
+              "Restore"
+            ],
+            "certificates": [
+              "Get",
+              "List",
+              "Update",
+              "Create",
+              "Import",
+              "Delete",
+              "Recover",
+              "Backup",
+              "Restore",
+              "ManageContacts",
+              "ManageIssuers",
+              "GetIssuers",
+              "ListIssuers",
+              "SetIssuers",
+              "DeleteIssuers"
+            ]
+          }
+        }
+      ]
+    },
+    "key_vault_enabledForTemplateDeployment": {
+      "value": true
+    },
+    "key_vault_networkAcls": {
+      "value": {
+        "defaultAction": "Allow",
+        "bypass": "AzureServices",
+        "virtualNetworkRules": [],
+        "ipRules": []
+      }
+    },
     // Azure Kubernetes Service
-    "aks_name": {
+    "kubernetes_name": {
       "value": "ummati-production"
     },
-    "aks_dnsPrefix": {
+    "kubernetes_dnsPrefix": {
       "value": "ummati-production"
     },
-    "aks_osDiskSizeGB": {
-      "value": 5
-    },
-    "aks_agentCount": {
-      "value": 1
-    },
-    "aks_agentVMSize": {
-      "value": "Standard_B2s"
-    },
-    "aks_maxPods": {
+    "kubernetes_osDiskSizeGB": {
       "value": 30
     },
-    "aks_kubernetesVersion": {
+    "kubernetes_agentCount": {
+      "value": 1
+    },
+    "kubernetes_agentVMSize": {
+      "value": "Standard_B2s"
+    },
+    "kubernetes_maxPods": {
+      "value": 30
+    },
+    "kubernetes_kubernetesVersion": {
       "value": "1.11.3"
     },
-    "aks_enableRBAC": {
+    "kubernetes_enableRBAC": {
       "value": true
+    },
+    "kubernetes_servicePrincipalClientId": {
+      "reference": {
+        "keyVault": {
+          // This does not currently work, see https://github.com/Azure/azure-quickstart-templates/issues/2036
+          //[resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.KeyVault/vaults', parameters('key_vault_name'))]
+          "id": "/subscriptions/dc01c77f-7452-4828-b574-3330cfbc06df/resourcegroups/Ummati-Production-WestEurope/providers/Microsoft.KeyVault/vaults/ummati-production"
+        },
+        "secretName": "AzureKubernetesServiceServicePrincipalClientId"
+      }
+    },
+    "kubernetes_servicePrincipalClientSecret": {
+      "reference": {
+        "keyVault": {
+          // This does not currently work, see https://github.com/Azure/azure-quickstart-templates/issues/2036
+          //[resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.KeyVault/vaults', parameters('key_vault_name'))]
+          "id": "/subscriptions/dc01c77f-7452-4828-b574-3330cfbc06df/resourcegroups/Ummati-Production-WestEurope/providers/Microsoft.KeyVault/vaults/ummati-production"
+        },
+        "secretName": "AzureKubernetesServiceServicePrincipalClientSecret"
+      }
     },
     // Azure Log Analytics
     "log_analytics_workspaceName": {

@@ -1,4 +1,8 @@
 {
+  // Run the following command to create the service principal
+  // az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/<Subscription ID>/resourceGroups/<Resource Group Name>"
+  // Store the Client ID and Client Secret in Azure Key Vault as:
+  // AzureKubernetesServiceServicePrincipalClientId and AzureKubernetesServiceServicePrincipalClientSecret
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
@@ -8,27 +12,86 @@
       },
       "type": "string"
     },
+    // Azure Key Vault
+    "key_vault_name": {
+      "metadata": {
+        "description": "Name of the Vault"
+      },
+      "type": "string"
+    },
+    "key_vault_tenantId": {
+      "defaultValue": "[subscription().tenantId]",
+      "metadata": {
+        "description": "Tenant Id of the subscription. Get using Get-AzureRmSubscription cmdlet or Get Subscription API"
+      },
+      "type": "string"
+    },
+    "key_vault_location": {
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "The location of the key vault resource."
+      },
+      "type": "string"
+    },
+    "key_vault_sku": {
+      "allowedValues": [
+        "Standard",
+        "standard",
+        "Premium",
+        "premium"
+      ],
+      "defaultValue": "Standard",
+      "metadata": {
+        "description": "SKU for the vault"
+      },
+      "type": "string"
+    },
+    "key_vault_accessPolicies": {
+      "defaultValue": [],
+      "metadata": {
+        "description": "The access policies defined for this vault."
+      },
+      "type": "array"
+    },
+    "key_vault_enabledForDeployment": {
+      "defaultValue": false,
+      "type": "bool"
+    },
+    "key_vault_enabledForTemplateDeployment": {
+      "defaultValue": false,
+      "type": "bool"
+    },
+    "key_vault_enabledForDiskEncryption": {
+      "defaultValue": false,
+      "type": "bool"
+    },
+    "key_vault_networkAcls": {
+      "metadata": {
+        "description": "The network firewall defined for this vault."
+      },
+      "type": "object"
+    },
     // Azure Kubernetes Service
-    "aks_name": {
+    "kubernetes_name": {
       "metadata": {
         "description": "The name of the Managed Cluster resource."
       },
       "type": "string"
     },
-    "aks_location": {
+    "kubernetes_location": {
       "defaultValue": "[resourceGroup().location]",
       "metadata": {
         "description": "The location of AKS resource."
       },
       "type": "string"
     },
-    "aks_dnsPrefix": {
+    "kubernetes_dnsPrefix": {
       "metadata": {
         "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
       },
       "type": "string"
     },
-    "aks_osDiskSizeGB": {
+    "kubernetes_osDiskSizeGB": {
       "defaultValue": 0,
       "metadata": {
         "description": "Disk size (in GB) to provision for each of the agent pool nodes. This value ranges from 0 to 1023. Specifying 0 will apply the default disk size for that agentVMSize."
@@ -37,7 +100,7 @@
       "minValue": 0,
       "type": "int"
     },
-    "aks_osType": {
+    "kubernetes_osType": {
       "allowedValues": [
         "Linux"
       ],
@@ -47,7 +110,7 @@
       },
       "type": "string"
     },
-    "aks_agentCount": {
+    "kubernetes_agentCount": {
       "defaultValue": 3,
       "metadata": {
         "description": "The number of agent nodes for the cluster."
@@ -56,49 +119,56 @@
       "minValue": 1,
       "type": "int"
     },
-    "aks_agentVMSize": {
+    "kubernetes_agentVMSize": {
       "defaultValue": "Standard_D2_v2",
       "metadata": {
         "description": "The size of the Virtual Machine."
       },
       "type": "string"
     },
-    "aks_maxPods": {
+    "kubernetes_maxPods": {
       "defaultValue": 30,
       "metadata": {
         "description": "Maximum number of pods that can run on a node."
       },
       "type": "int"
     },
-    "aks_servicePrincipalClientId": {
-      "defaultValue": null,
-      "metadata": {
-        "description": "Client ID (used by cloudprovider)"
-      },
-      "type": "securestring"
-    },
-    "aks_servicePrincipalClientSecret": {
-      "defaultValue": null,
-      "metadata": {
-        "description": "The Service Principal Client Secret."
-      },
-      "type": "securestring"
-    },
-    "aks_kubernetesVersion": {
+    "kubernetes_kubernetesVersion": {
       "defaultValue": "1.7.7",
       "metadata": {
         "description": "The version of Kubernetes."
       },
       "type": "string"
     },
-    "aks_enableHttpApplicationRouting": {
+    "kubernetes_enableRBAC": {
+      "defaultValue": true,
+      "metadata": {
+        "description": "boolean flag to turn on and off of RBAC"
+      },
+      "type": "bool"
+    },
+    "kubernetes_enableHttpApplicationRouting": {
       "defaultValue": false,
       "metadata": {
         "description": "boolean flag to turn on and off of http application routing"
       },
       "type": "bool"
     },
-    "aks_networkPlugin": {
+    "kubernetes_servicePrincipalClientId": {
+      "defaultValue": null,
+      "metadata": {
+        "description": "Client ID (used by cloudprovider)"
+      },
+      "type": "string"
+    },
+    "kubernetes_servicePrincipalClientSecret": {
+      "defaultValue": null,
+      "metadata": {
+        "description": "The Service Principal Client Secret."
+      },
+      "type": "string"
+    },
+    "kubernetes_networkPlugin": {
       "allowedValues": [
         "azure",
         "kubenet"
@@ -109,14 +179,7 @@
       },
       "type": "string"
     },
-    "aks_enableRBAC": {
-      "defaultValue": true,
-      "metadata": {
-        "description": "boolean flag to turn on and off of RBAC"
-      },
-      "type": "bool"
-    },
-    "aks_enableOmsAgent": {
+    "kubernetes_enableOmsAgent": {
       "defaultValue": true,
       "metadata": {
         "description": "boolean flag to turn on and off of omsagent addon"
@@ -156,7 +219,30 @@
       "type": "string"
     }
   },
+  "variables": {},
   "resources": [
+    {
+      "comments": "Azure Key Vault",
+      "type": "Microsoft.KeyVault/vaults",
+      "name": "[parameters('key_vault_name')]",
+      "apiVersion": "2016-10-01",
+      "location": "[parameters('key_vault_location')]",
+      "properties": {
+        "enabledForDeployment": "[parameters('key_vault_enabledForDeployment')]",
+        "enabledForDiskEncryption": "[parameters('key_vault_enabledForDiskEncryption')]",
+        "enabledForTemplateDeployment": "[parameters('key_vault_enabledForTemplateDeployment')]",
+        "accessPolicies": "[parameters('key_vault_accessPolicies')]",
+        "tenantId": "[parameters('key_vault_tenantId')]",
+        "sku": {
+          "name": "[parameters('key_vault_sku')]",
+          "family": "A"
+        },
+        "networkAcls": "[parameters('key_vault_networkAcls')]"
+      },
+      "tags": {
+        "Environment": "[parameters('environment')]"
+      }
+    },
     {
       "comments": "Azure Kubernetes Service",
       "apiVersion": "2018-03-31",
@@ -164,18 +250,18 @@
         "[concat('Microsoft.Resources/deployments/', 'WorkspaceDeployment')]"
       ],
       "type": "Microsoft.ContainerService/managedClusters",
-      "location": "[parameters('aks_location')]",
-      "name": "[parameters('aks_name')]",
+      "location": "[parameters('kubernetes_location')]",
+      "name": "[parameters('kubernetes_name')]",
       "properties": {
-        "kubernetesVersion": "[parameters('aks_kubernetesVersion')]",
-        "enableRBAC": "[parameters('aks_enableRBAC')]",
-        "dnsPrefix": "[parameters('aks_dnsPrefix')]",
+        "kubernetesVersion": "[parameters('kubernetes_kubernetesVersion')]",
+        "enableRBAC": "[parameters('kubernetes_enableRBAC')]",
+        "dnsPrefix": "[parameters('kubernetes_dnsPrefix')]",
         "addonProfiles": {
           "httpApplicationRouting": {
-            "enabled": "[parameters('aks_enableHttpApplicationRouting')]"
+            "enabled": "[parameters('kubernetes_enableHttpApplicationRouting')]"
           },
           "omsagent": {
-            "enabled": "[parameters('aks_enableOmsAgent')]",
+            "enabled": "[parameters('kubernetes_enableOmsAgent')]",
             "config": {
               "logAnalyticsWorkspaceResourceID": "[parameters('log_analytics_workspaceId')]"
             }
@@ -184,20 +270,20 @@
         "agentPoolProfiles": [
           {
             "name": "agentpool",
-            "osDiskSizeGB": "[parameters('aks_osDiskSizeGB')]",
-            "osType": "[parameters('aks_osType')]",
-            "count": "[parameters('aks_agentCount')]",
-            "vmSize": "[parameters('aks_agentVMSize')]",
+            "osDiskSizeGB": "[parameters('kubernetes_osDiskSizeGB')]",
+            "osType": "[parameters('kubernetes_osType')]",
+            "count": "[parameters('kubernetes_agentCount')]",
+            "vmSize": "[parameters('kubernetes_agentVMSize')]",
             "storageProfile": "ManagedDisks",
-            "maxPods": "[parameters('aks_maxPods')]"
+            "maxPods": "[parameters('kubernetes_maxPods')]"
           }
         ],
         "servicePrincipalProfile": {
-          "ClientId": "[parameters('aks_servicePrincipalClientId')]",
-          "Secret": "[parameters('aks_servicePrincipalClientSecret')]"
+          "ClientId": "[parameters('kubernetes_servicePrincipalClientId')]",
+          "Secret": "[parameters('kubernetes_servicePrincipalClientSecret')]"
         },
         "networkProfile": {
-          "networkPlugin": "[parameters('aks_networkPlugin')]"
+          "networkPlugin": "[parameters('kubernetes_networkPlugin')]"
         }
       },
       "tags": {
@@ -239,10 +325,7 @@
       },
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'WorkspaceDeployment')]"
-      ],
-      "tags": {
-        "Environment": "[parameters('environment')]"
-      }
+      ]
     },
     {
       "comments": "Azure Log Analytics",
@@ -272,16 +355,13 @@
             }
           ]
         }
-      },
-      "tags": {
-        "Environment": "[parameters('environment')]"
       }
     }
   ],
   "outputs": {
     "controlPlaneFQDN": {
       "type": "string",
-      "value": "[reference(concat('Microsoft.ContainerService/managedClusters/', parameters('aks_name'))).fqdn]"
+      "value": "[reference(concat('Microsoft.ContainerService/managedClusters/', parameters('kubernetes_name'))).fqdn]"
     }
   }
 }
