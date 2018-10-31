@@ -2,12 +2,32 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "environment": {
+      "metadata": {
+        "description": "The name of the environment."
+      },
+      "type": "string"
+    },
     // Azure Container Registry
     "container_registry_name": {
       "type": "string"
     },
+    "container_registry_location": {
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "The location of the container registry resource."
+      },
+      "type": "string"
+    },
     // Azure Key Vault
     "key_vault_name": {
+      "type": "string"
+    },
+    "key_vault_location": {
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "The location of the key vault resource."
+      },
       "type": "string"
     },
     "key_vault_sku": {
@@ -18,17 +38,17 @@
         "premium"
       ],
       "defaultValue": "Standard",
-      "type": "string",
       "metadata": {
         "description": "SKU for the vault"
-      }
+      },
+      "type": "string"
     },
     "key_vault_accessPolicies": {
-      "type": "array",
       "defaultValue": [],
       "metadata": {
         "description": "The access policies defined for this vault."
-      }
+      },
+      "type": "array"
     },
     "key_vault_tenant": {
       "type": "string"
@@ -43,10 +63,10 @@
       "type": "bool"
     },
     "key_vault_networkAcls": {
-      "type": "object",
       "metadata": {
         "description": "The network firewall defined for this vault."
-      }
+      },
+      "type": "object"
     }
   },
   "variables": {},
@@ -60,21 +80,21 @@
       },
       "name": "[parameters('container_registry_name')]",
       "apiVersion": "2017-10-01",
-      "location": "[resourceGroup().location]",
-      "tags": {
-        "Environment": "Common"
-      },
+      "location": "[parameters('container_registry_location')]",
       "scale": null,
       "properties": {
         "adminUserEnabled": true
       },
-      "dependsOn": []
+      "dependsOn": [],
+      "tags": {
+        "Environment": "[parameters('environment')]"
+      }
     },
     {
       "comments": "Azure Key Vault",
       "apiVersion": "2016-10-01",
       "name": "[parameters('key_vault_name')]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('key_vault_location')]",
       "type": "Microsoft.KeyVault/vaults",
       "properties": {
         "enabledForDeployment": "[parameters('key_vault_enabledForDeployment')]",
@@ -87,7 +107,62 @@
           "family": "A"
         },
         "networkAcls": "[parameters('key_vault_networkAcls')]"
+      },
+      "tags": {
+        "Environment": "[parameters('environment')]"
       }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(parameters('key_vault_name'), '/AzureContainerRegistryServer')]",
+      "apiVersion": "2015-06-01",
+      "properties": {
+        "contentType": "text/plain",
+        "value": "[reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('container_registry_name')), '2017-10-01').loginServer]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.KeyVault/vaults/', parameters('key_vault_name'))]",
+        "[concat('Microsoft.ContainerRegistry/registries/', parameters('container_registry_name'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(parameters('key_vault_name'), '/AzureContainerRegistryUsername')]",
+      "apiVersion": "2015-06-01",
+      "properties": {
+        "contentType": "text/plain",
+        "value": "[listCredentials(resourceId('Microsoft.ContainerRegistry/registries', parameters('container_registry_name')), '2017-10-01').username]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.KeyVault/vaults/', parameters('key_vault_name'))]",
+        "[concat('Microsoft.ContainerRegistry/registries/', parameters('container_registry_name'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(parameters('key_vault_name'), '/AzureContainerRegistryPassword1')]",
+      "apiVersion": "2015-06-01",
+      "properties": {
+        "contentType": "text/plain",
+        "value": "[listCredentials(resourceId('Microsoft.ContainerRegistry/registries', parameters('container_registry_name')), '2017-10-01').passwords[0].value]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.KeyVault/vaults/', parameters('key_vault_name'))]",
+        "[concat('Microsoft.ContainerRegistry/registries/', parameters('container_registry_name'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(parameters('key_vault_name'), '/AzureContainerRegistryPassword2')]",
+      "apiVersion": "2015-06-01",
+      "properties": {
+        "contentType": "text/plain",
+        "value": "[listCredentials(resourceId('Microsoft.ContainerRegistry/registries', parameters('container_registry_name')), '2017-10-01').passwords[1].value]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.KeyVault/vaults/', parameters('key_vault_name'))]",
+        "[concat('Microsoft.ContainerRegistry/registries/', parameters('container_registry_name'))]"
+      ]
     }
   ]
 }
