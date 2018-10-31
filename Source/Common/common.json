@@ -178,6 +178,20 @@
       }
     },
     {
+      "comments": "Azure Key Vault Secret (Azure Container Registry Name)",
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(parameters('key_vault_name'), '/AzureContainerRegistryName')]",
+      "apiVersion": "2015-06-01",
+      "dependsOn": [
+        "[variables('key_vault_resourceName')]",
+        "[variables('container_registry_resourceName')]"
+      ],
+      "properties": {
+        "contentType": "text/plain",
+        "value": "[parameters('container_registry_name')]"
+      }
+    },
+    {
       "comments": "Azure Key Vault Secret (Azure Container Registry Server)",
       "type": "Microsoft.KeyVault/vaults/secrets",
       "name": "[concat(parameters('key_vault_name'), '/AzureContainerRegistryServer')]",
