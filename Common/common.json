@@ -8,17 +8,6 @@
       },
       "type": "string"
     },
-    // Azure Container Registry
-    "container_registry_name": {
-      "type": "string"
-    },
-    "container_registry_location": {
-      "defaultValue": "[resourceGroup().location]",
-      "metadata": {
-        "description": "The location of the container registry resource."
-      },
-      "type": "string"
-    },
     // Azure Key Vault
     "key_vault_name": {
       "type": "string"
@@ -67,29 +56,21 @@
         "description": "The network firewall defined for this vault."
       },
       "type": "object"
+    },
+    // Azure Container Registry
+    "container_registry_name": {
+      "type": "string"
+    },
+    "container_registry_location": {
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "The location of the container registry resource."
+      },
+      "type": "string"
     }
   },
   "variables": {},
   "resources": [
-    {
-      "comments": "Azure Container Registry",
-      "type": "Microsoft.ContainerRegistry/registries",
-      "sku": {
-        "name": "Basic",
-        "tier": "Basic"
-      },
-      "name": "[parameters('container_registry_name')]",
-      "apiVersion": "2017-10-01",
-      "location": "[parameters('container_registry_location')]",
-      "scale": null,
-      "properties": {
-        "adminUserEnabled": true
-      },
-      "dependsOn": [],
-      "tags": {
-        "Environment": "[parameters('environment')]"
-      }
-    },
     {
       "comments": "Azure Key Vault",
       "apiVersion": "2016-10-01",
@@ -113,6 +94,7 @@
       }
     },
     {
+      "comments": "Azure Key Vault Secret (Azure Container Registry Server)",
       "type": "Microsoft.KeyVault/vaults/secrets",
       "name": "[concat(parameters('key_vault_name'), '/AzureContainerRegistryServer')]",
       "apiVersion": "2015-06-01",
@@ -126,6 +108,7 @@
       ]
     },
     {
+      "comments": "Azure Key Vault Secret (Azure Container Registry Username)",
       "type": "Microsoft.KeyVault/vaults/secrets",
       "name": "[concat(parameters('key_vault_name'), '/AzureContainerRegistryUsername')]",
       "apiVersion": "2015-06-01",
@@ -139,6 +122,7 @@
       ]
     },
     {
+      "comments": "Azure Key Vault Secret (Azure Container Registry Password 1)",
       "type": "Microsoft.KeyVault/vaults/secrets",
       "name": "[concat(parameters('key_vault_name'), '/AzureContainerRegistryPassword1')]",
       "apiVersion": "2015-06-01",
@@ -152,6 +136,7 @@
       ]
     },
     {
+      "comments": "Azure Key Vault Secret (Azure Container Registry Password 2)",
       "type": "Microsoft.KeyVault/vaults/secrets",
       "name": "[concat(parameters('key_vault_name'), '/AzureContainerRegistryPassword2')]",
       "apiVersion": "2015-06-01",
@@ -163,6 +148,25 @@
         "[concat('Microsoft.KeyVault/vaults/', parameters('key_vault_name'))]",
         "[concat('Microsoft.ContainerRegistry/registries/', parameters('container_registry_name'))]"
       ]
+    },
+    {
+      "comments": "Azure Container Registry",
+      "type": "Microsoft.ContainerRegistry/registries",
+      "sku": {
+        "name": "Basic",
+        "tier": "Basic"
+      },
+      "name": "[parameters('container_registry_name')]",
+      "apiVersion": "2017-10-01",
+      "location": "[parameters('container_registry_location')]",
+      "scale": null,
+      "properties": {
+        "adminUserEnabled": true
+      },
+      "dependsOn": [],
+      "tags": {
+        "Environment": "[parameters('environment')]"
+      }
     }
   ]
 }
