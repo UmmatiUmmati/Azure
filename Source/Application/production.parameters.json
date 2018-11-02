@@ -69,6 +69,19 @@
     "key_vault_enabledForTemplateDeployment": {
       "value": true
     },
+    // Azure Log Analytics
+    "log_analytics_name": {
+      "value": "ummati-production"
+    },
+    "log_analytics_workspaceId": {
+      "value": "/subscriptions/dc01c77f-7452-4828-b574-3330cfbc06df/resourceGroups/Ummati-Production-WestEurope/providers/Microsoft.OperationalInsights/workspaces/ummati-production"
+    },
+    "log_analytics_sku": {
+      "value": "free"
+    },
+    "log_analytics_retentionInDays": {
+      "value": 7
+    },
     // Azure Kubernetes Service
     "kubernetes_name": {
       "value": "ummati-production"
@@ -113,16 +126,6 @@
         },
         "secretName": "AzureKubernetesServiceServicePrincipalClientSecret"
       }
-    },
-    // Azure Log Analytics
-    "log_analytics_workspaceName": {
-      "value": "ummati-production"
-    },
-    "log_analytics_workspaceId": {
-      "value": "/subscriptions/dc01c77f-7452-4828-b574-3330cfbc06df/resourceGroups/DefaultResourceGroup-WEU/providers/Microsoft.OperationalInsights/workspaces/ummati-production"
-    },
-    "log_analytics_sku": {
-      "value": "free"
     }
   }
 }

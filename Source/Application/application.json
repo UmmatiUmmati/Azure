@@ -116,6 +116,46 @@
       },
       "type": "bool"
     },
+    // Azure Log Analytics
+    "log_analytics_name": {
+      "metadata": {
+        "description": "The name of the log analytics"
+      },
+      "type": "string"
+    },
+    "log_analytics_location": {
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Specify the region for your OMS workspace"
+      },
+      "type": "string"
+    },
+    "log_analytics_workspaceId": {
+      "metadata": {
+        "description": "Specify the resource id of the OMS workspace"
+      },
+      "type": "string"
+    },
+    "log_analytics_sku": {
+      "allowedValues": [
+        "free",
+        "standalone",
+        "pernode"
+      ],
+      "defaultValue": "free",
+      "metadata": {
+        "description": "Select the SKU for your workspace"
+      },
+      "type": "string"
+    },
+    "log_analytics_retentionInDays": {
+      "metadata": {
+        "description": "The workspace data retention in days. -1 means Unlimited retention for the Unlimited Sku. 730 days is the maximum allowed for all other Skus."
+      },
+      "maxValue": 730,
+      "minValue": -1,
+      "type": "int"
+    },
     // Azure Kubernetes Service
     "kubernetes_name": {
       "metadata": {
@@ -230,41 +270,12 @@
         "description": "boolean flag to turn on and off of omsagent addon"
       },
       "type": "bool"
-    },
-    // Azure Log Analytics
-    "log_analytics_location": {
-      "defaultValue": "[resourceGroup().location]",
-      "metadata": {
-        "description": "Specify the region for your OMS workspace"
-      },
-      "type": "string"
-    },
-    "log_analytics_workspaceName": {
-      "metadata": {
-        "description": "Specify the name of the OMS workspace"
-      },
-      "type": "string"
-    },
-    "log_analytics_workspaceId": {
-      "metadata": {
-        "description": "Specify the resource id of the OMS workspace"
-      },
-      "type": "string"
-    },
-    "log_analytics_sku": {
-      "allowedValues": [
-        "free",
-        "standalone",
-        "pernode"
-      ],
-      "defaultValue": "free",
-      "metadata": {
-        "description": "Select the SKU for your workspace"
-      },
-      "type": "string"
     }
   },
-  "variables": {},
+  "variables": {
+    "key_vault_resourceName": "[concat('Microsoft.KeyVault/vaults/', parameters('key_vault_name'))]",
+    "log_analytics_resourceName": "[concat('Microsoft.OperationalInsights/workspaces/', parameters('log_analytics_name'))]"
+  },
   "resources": [
     {
       "comments": "Azure Key Vault",
@@ -299,13 +310,45 @@
       }
     },
     {
+      "comments": "Azure Log Analytics",
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "name": "[parameters('log_analytics_name')]",
+      "apiVersion": "2015-11-01-preview",
+      "location": "[parameters('log_analytics_location')]",
+      "properties": {
+        "sku": {
+          "name": "[parameters('log_analytics_sku')]"
+        },
+        "retentionInDays": "[parameters('log_analytics_retentionInDays')]"
+      },
+      "tags": {
+        "Environment": "[parameters('environment')]"
+      }
+    },
+    {
+      "type": "Microsoft.OperationsManagement/solutions",
+      "name": "[concat('ContainerInsights', '(', split(parameters('log_analytics_workspaceId'),'/')[8], ')')]",
+      "apiVersion": "2015-11-01-preview",
+      "location": "[parameters('log_analytics_location')]",
+      "properties": {
+        "workspaceResourceId": "[parameters('log_analytics_workspaceId')]"
+      },
+      "plan": {
+        "name": "[concat('ContainerInsights', '(', split(parameters('log_analytics_workspaceId'),'/')[8], ')')]",
+        "product": "[concat('OMSGallery/', 'ContainerInsights')]",
+        "promotionCode": "",
+        "publisher": "Microsoft"
+      }
+    },
+    {
       "comments": "Azure Kubernetes Service",
       "type": "Microsoft.ContainerService/managedClusters",
       "name": "[parameters('kubernetes_name')]",
       "apiVersion": "2018-03-31",
       "location": "[parameters('kubernetes_location')]",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'WorkspaceDeployment')]"
+        "[variables('log_analytics_resourceName')]"
+        // "[variables('log_analytics_solution_resourceName')]"
       ],
       "properties": {
         "kubernetesVersion": "[parameters('kubernetes_kubernetesVersion')]",
@@ -343,73 +386,6 @@
       },
       "tags": {
         "Environment": "[parameters('environment')]"
-      }
-    },
-    {
-      "comments": "Azure Log Analytics (Container Insights)",
-      "type": "Microsoft.Resources/deployments",
-      "name": "SolutionDeployment",
-      "apiVersion": "2017-05-10",
-      "resourceGroup": "[split(parameters('log_analytics_workspaceId'),'/')[4]]",
-      "subscriptionId": "[split(parameters('log_analytics_workspaceId'),'/')[2]]",
-      "properties": {
-        "mode": "Incremental",
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "parameters": {},
-          "variables": {},
-          "resources": [
-            {
-              "apiVersion": "2015-11-01-preview",
-              "type": "Microsoft.OperationsManagement/solutions",
-              "location": "[parameters('log_analytics_location')]",
-              "name": "[concat('ContainerInsights', '(', split(parameters('log_analytics_workspaceId'),'/')[8], ')')]",
-              "properties": {
-                "workspaceResourceId": "[parameters('log_analytics_workspaceId')]"
-              },
-              "plan": {
-                "name": "[concat('ContainerInsights', '(', split(parameters('log_analytics_workspaceId'),'/')[8], ')')]",
-                "product": "[concat('OMSGallery/', 'ContainerInsights')]",
-                "promotionCode": "",
-                "publisher": "Microsoft"
-              }
-            }
-          ]
-        }
-      },
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'WorkspaceDeployment')]"
-      ]
-    },
-    {
-      "comments": "Azure Log Analytics",
-      "type": "Microsoft.Resources/deployments",
-      "name": "WorkspaceDeployment",
-      "apiVersion": "2017-05-10",
-      "resourceGroup": "[split(parameters('log_analytics_workspaceId'),'/')[4]]",
-      "subscriptionId": "[split(parameters('log_analytics_workspaceId'),'/')[2]]",
-      "properties": {
-        "mode": "Incremental",
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "parameters": {},
-          "variables": {},
-          "resources": [
-            {
-              "apiVersion": "2015-11-01-preview",
-              "type": "Microsoft.OperationalInsights/workspaces",
-              "location": "[parameters('log_analytics_location')]",
-              "name": "[parameters('log_analytics_workspaceName')]",
-              "properties": {
-                "sku": {
-                  "name": "[parameters('log_analytics_sku')]"
-                }
-              }
-            }
-          ]
-        }
       }
     }
   ],
