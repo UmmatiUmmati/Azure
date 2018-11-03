@@ -116,6 +116,51 @@
       },
       "type": "bool"
     },
+    // Azure Application Insights
+    "application_insights_name": {
+      "metadata": {
+        "description": "The name of the Application Insights component resource."
+      },
+      "type": "string"
+    },
+    "application_insights_kind": {
+      "allowedValues": [
+        "web",
+        "ios",
+        "other",
+        "store",
+        "java",
+        "phone"
+      ],
+      "metadata": {
+        "description": "The kind of application that this component refers to, used to customize UI. This value is a freeform string, values should typically be one of the following: web, ios, other, store, java, phone."
+      },
+      "type": "string"
+    },
+    "application_insights_location": {
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Specify the region for application insights"
+      },
+      "type": "string"
+    },
+    "application_insights_type": {
+      "allowedValues": [
+        "web",
+        "other"
+      ],
+      "metadata": {
+        "description": "Type of application being monitored. - web or other"
+      },
+      "type": "string"
+    },
+    "application_insights_samplingPercentage": {
+      "defaultValue": 100,
+      "metadata": {
+        "description": "Percentage of the data produced by the application being monitored that is being sampled for Application Insights telemetry."
+      },
+      "type": "int"
+    },
     // Azure Log Analytics
     "log_analytics_name": {
       "metadata": {
@@ -273,8 +318,12 @@
     }
   },
   "variables": {
-    "key_vault_resourceName": "[concat('Microsoft.KeyVault/vaults/', parameters('key_vault_name'))]",
-    "log_analytics_resourceName": "[concat('Microsoft.OperationalInsights/workspaces/', parameters('log_analytics_name'))]"
+    "container_insights_name": "[concat('ContainerInsights(', split(parameters('log_analytics_workspaceId'),'/')[8], ')')]",
+    "application_insights_resourceId": "[resourceId('Microsoft.Insights/components', parameters('application_insights_name'))]",
+    "container_insights_resourceId": "[concat('Microsoft.OperationsManagement/solutions/', variables('container_insights_name'))]",
+    "key_vault_resourceId": "[concat('Microsoft.KeyVault/vaults/', parameters('key_vault_name'))]",
+    "kubernetes_resourceId": "[concat('Microsoft.ContainerService/managedClusters/', parameters('kubernetes_name'))]",
+    "log_analytics_resourceId": "[concat('Microsoft.OperationalInsights/workspaces/', parameters('log_analytics_name'))]"
   },
   "resources": [
     {
@@ -310,6 +359,51 @@
       }
     },
     {
+      "comments": "Azure Key Vault Secret (Application Insights Instrumentation Key)",
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(parameters('application_insights_name'), '/ApplicationInsightsInstrumentationKey')]",
+      "apiVersion": "2015-06-01",
+      "dependsOn": [
+        "[variables('key_vault_resourceId')]",
+        "[variables('application_insights_resourceId')]"
+      ],
+      "properties": {
+        "contentType": "text/plain",
+        "value": "[reference(variables('application_insights_resourceId'), '2014-04-01').InstrumentationKey]"
+      }
+    },
+    {
+      "comments": "Azure Key Vault Secret (Kubernetes Server)",
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(parameters('key_vault_name'), '/KubernetesServer')]",
+      "apiVersion": "2015-06-01",
+      "dependsOn": [
+        "[variables('key_vault_resourceId')]",
+        "[variables('kubernetes_resourceId')]"
+      ],
+      "properties": {
+        "contentType": "text/plain",
+        "value": "[reference(variables('kubernetes_resourceId')).fqdn]"
+      }
+    },
+    {
+      "comments": "Azure Application Insights",
+      "type": "microsoft.insights/components",
+      "name": "[parameters('application_insights_name')]",
+      "apiVersion": "2014-08-01",
+      "location": "[parameters('application_insights_location')]",
+      "kind": "[parameters('application_insights_kind')]",
+      "properties": {
+        "ApplicationId": "[parameters('application_insights_name')]",
+        "Application_Type": "[parameters('application_insights_type')]",
+        "Flow_Type": "Bluefield",
+        "Request_Source": "rest"
+      },
+      "tags": {
+        "Environment": "[parameters('environment')]"
+      }
+    },
+    {
       "comments": "Azure Log Analytics",
       "type": "Microsoft.OperationalInsights/workspaces",
       "name": "[parameters('log_analytics_name')]",
@@ -327,17 +421,20 @@
     },
     {
       "type": "Microsoft.OperationsManagement/solutions",
-      "name": "[concat('ContainerInsights', '(', split(parameters('log_analytics_workspaceId'),'/')[8], ')')]",
+      "name": "[variables('container_insights_name')]",
       "apiVersion": "2015-11-01-preview",
       "location": "[parameters('log_analytics_location')]",
       "properties": {
         "workspaceResourceId": "[parameters('log_analytics_workspaceId')]"
       },
       "plan": {
-        "name": "[concat('ContainerInsights', '(', split(parameters('log_analytics_workspaceId'),'/')[8], ')')]",
+        "name": "[variables('container_insights_name')]",
         "product": "[concat('OMSGallery/', 'ContainerInsights')]",
         "promotionCode": "",
         "publisher": "Microsoft"
+      },
+      "tags": {
+        "Environment": "[parameters('environment')]"
       }
     },
     {
@@ -347,8 +444,8 @@
       "apiVersion": "2018-03-31",
       "location": "[parameters('kubernetes_location')]",
       "dependsOn": [
-        "[variables('log_analytics_resourceName')]"
-        // "[variables('log_analytics_solution_resourceName')]"
+        "[variables('log_analytics_resourceId')]",
+        "[variables('container_insights_name')]"
       ],
       "properties": {
         "kubernetesVersion": "[parameters('kubernetes_kubernetesVersion')]",
@@ -390,9 +487,13 @@
     }
   ],
   "outputs": {
-    "controlPlaneFQDN": {
+    "application_insights_instrumentationKey": {
       "type": "string",
-      "value": "[reference(concat('Microsoft.ContainerService/managedClusters/', parameters('kubernetes_name'))).fqdn]"
+      "value": "[reference(variables('application_insights_resourceId'), '2014-04-01').InstrumentationKey]"
+    },
+    "kubernetes_server": {
+      "type": "string",
+      "value": "[reference(variables('kubernetes_resourceId')).fqdn]"
     }
   }
 }

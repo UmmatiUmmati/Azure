@@ -69,6 +69,19 @@
     "key_vault_enabledForTemplateDeployment": {
       "value": true
     },
+    // Azure Application Insights
+    "application_insights_name": {
+      "value": "ummati-production"
+    },
+    "application_insights_kind": {
+      "value": "web"
+    },
+    "application_insights_type": {
+      "value": "web"
+    },
+    "application_insights_samplingPercentage": {
+      "value": 100
+    },
     // Azure Log Analytics
     "log_analytics_name": {
       "value": "ummati-production"
