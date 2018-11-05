@@ -320,10 +320,10 @@
   "variables": {
     "container_insights_name": "[concat('ContainerInsights(', split(parameters('log_analytics_workspaceId'),'/')[8], ')')]",
     "application_insights_resourceId": "[resourceId('Microsoft.Insights/components', parameters('application_insights_name'))]",
-    "container_insights_resourceId": "[concat('Microsoft.OperationsManagement/solutions/', variables('container_insights_name'))]",
-    "key_vault_resourceId": "[concat('Microsoft.KeyVault/vaults/', parameters('key_vault_name'))]",
-    "kubernetes_resourceId": "[concat('Microsoft.ContainerService/managedClusters/', parameters('kubernetes_name'))]",
-    "log_analytics_resourceId": "[concat('Microsoft.OperationalInsights/workspaces/', parameters('log_analytics_name'))]"
+    "container_insights_resourceId": "[resourceId('Microsoft.OperationsManagement/solutions', variables('container_insights_name'))]",
+    "key_vault_resourceId": "[resourceId('Microsoft.KeyVault/vaults', parameters('key_vault_name'))]",
+    "kubernetes_resourceId": "[resourceId('Microsoft.ContainerService/managedClusters', parameters('kubernetes_name'))]",
+    "log_analytics_resourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('log_analytics_name'))]"
   },
   "resources": [
     {
@@ -364,8 +364,8 @@
       "name": "[concat(parameters('application_insights_name'), '/ApplicationInsightsInstrumentationKey')]",
       "apiVersion": "2015-06-01",
       "dependsOn": [
-        "[variables('key_vault_resourceId')]",
-        "[variables('application_insights_resourceId')]"
+        "[variables('application_insights_resourceId')]",
+        "[variables('key_vault_resourceId')]"
       ],
       "properties": {
         "contentType": "text/plain",
@@ -444,8 +444,8 @@
       "apiVersion": "2018-03-31",
       "location": "[parameters('kubernetes_location')]",
       "dependsOn": [
-        "[variables('log_analytics_resourceId')]",
-        "[variables('container_insights_name')]"
+        "[variables('container_insights_resourceId')]",
+        "[variables('log_analytics_resourceId')]"
       ],
       "properties": {
         "kubernetesVersion": "[parameters('kubernetes_kubernetesVersion')]",
