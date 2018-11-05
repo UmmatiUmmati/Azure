@@ -265,5 +265,23 @@
         "Environment": "[parameters('environment')]"
       }
     }
-  ]
+  ],
+  "outputs": {
+    "container_registry_server": {
+      "type": "string",
+      "value": "[reference(variables('container_registry_resourceId'), '2017-10-01').loginServer]"
+    },
+    "container_registry_username": {
+      "type": "securestring",
+      "value": "[listCredentials(variables('container_registry_resourceId'), '2017-10-01').username]"
+    },
+    "container_registry_password1": {
+      "type": "securestring",
+      "value": "[listCredentials(variables('container_registry_resourceId'), '2017-10-01').passwords[0].value]"
+    },
+    "container_registry_password2": {
+      "type": "securestring",
+      "value": "[listCredentials(variables('container_registry_resourceId'), '2017-10-01').passwords[1].value]"
+    }
+  }
 }

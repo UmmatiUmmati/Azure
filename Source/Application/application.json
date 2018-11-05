@@ -488,7 +488,7 @@
   ],
   "outputs": {
     "application_insights_instrumentationKey": {
-      "type": "string",
+      "type": "securestring",
       "value": "[reference(variables('application_insights_resourceId'), '2014-04-01').InstrumentationKey]"
     },
     "kubernetes_server": {
