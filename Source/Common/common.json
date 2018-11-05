@@ -141,8 +141,7 @@
   },
   "variables": {
     "container_registry_resourceId": "[resourceId('Microsoft.ContainerRegistry/registries', parameters('container_registry_name'))]",
-    "container_registry_resourceName": "[concat('Microsoft.ContainerRegistry/registries/', parameters('container_registry_name'))]",
-    "key_vault_resourceName": "[concat('Microsoft.KeyVault/vaults/', parameters('key_vault_name'))]"
+    "key_vault_resourceId": "[resourceId('Microsoft.KeyVault/vaults', parameters('key_vault_name'))]"
   },
   "resources": [
     {
@@ -183,8 +182,8 @@
       "name": "[concat(parameters('key_vault_name'), '/AzureContainerRegistryName')]",
       "apiVersion": "2015-06-01",
       "dependsOn": [
-        "[variables('key_vault_resourceName')]",
-        "[variables('container_registry_resourceName')]"
+        "[variables('container_registry_resourceId')]",
+        "[variables('key_vault_resourceId')]"
       ],
       "properties": {
         "contentType": "text/plain",
@@ -197,8 +196,8 @@
       "name": "[concat(parameters('key_vault_name'), '/AzureContainerRegistryServer')]",
       "apiVersion": "2015-06-01",
       "dependsOn": [
-        "[variables('key_vault_resourceName')]",
-        "[variables('container_registry_resourceName')]"
+        "[variables('container_registry_resourceId')]",
+        "[variables('key_vault_resourceId')]"
       ],
       "properties": {
         "contentType": "text/plain",
@@ -211,8 +210,8 @@
       "name": "[concat(parameters('key_vault_name'), '/AzureContainerRegistryUsername')]",
       "apiVersion": "2015-06-01",
       "dependsOn": [
-        "[variables('key_vault_resourceName')]",
-        "[variables('container_registry_resourceName')]"
+        "[variables('container_registry_resourceId')]",
+        "[variables('key_vault_resourceId')]"
       ],
       "properties": {
         "contentType": "text/plain",
@@ -225,8 +224,8 @@
       "name": "[concat(parameters('key_vault_name'), '/AzureContainerRegistryPassword1')]",
       "apiVersion": "2015-06-01",
       "dependsOn": [
-        "[variables('key_vault_resourceName')]",
-        "[variables('container_registry_resourceName')]"
+        "[variables('container_registry_resourceId')]",
+        "[variables('key_vault_resourceId')]"
       ],
       "properties": {
         "contentType": "text/plain",
@@ -239,8 +238,8 @@
       "name": "[concat(parameters('key_vault_name'), '/AzureContainerRegistryPassword2')]",
       "apiVersion": "2015-06-01",
       "dependsOn": [
-        "[variables('key_vault_resourceName')]",
-        "[variables('container_registry_resourceName')]"
+        "[variables('container_registry_resourceId')]",
+        "[variables('key_vault_resourceId')]"
       ],
       "properties": {
         "contentType": "text/plain",
