@@ -1,6 +1,6 @@
 {
   // Run the following command to create the service principal.
-  // az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/<Subscription ID>/resourceGroups/<Resource Group Name>"
+  // az ad sp create-for-rbac --name "ummati-<Environment>" --role="Contributor" --scopes="/subscriptions/<Subscription ID>/resourceGroups/<Resource Group Name>"
   // Store the Client ID and Client Secret in Azure Key Vault as:
   // AzureKubernetesServiceServicePrincipalClientId and AzureKubernetesServiceServicePrincipalClientSecret
   //
