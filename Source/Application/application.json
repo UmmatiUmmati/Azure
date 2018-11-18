@@ -420,6 +420,9 @@
       "name": "[variables('container_insights_name')]",
       "apiVersion": "2015-11-01-preview",
       "location": "[parameters('log_analytics_location')]",
+      "dependsOn": [
+        "[variables('log_analytics_resourceId')]"
+      ],
       "properties": {
         "workspaceResourceId": "[parameters('log_analytics_workspaceId')]"
       },
