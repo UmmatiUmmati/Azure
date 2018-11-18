@@ -1,0 +1,144 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environment": {
+      "value": "Staging"
+    },
+    // Azure Key Vault
+    "key_vault_name": {
+      "value": "ummati-staging"
+    },
+    "key_vault_objectId": {
+      "value": "52eab0d8-353a-4efe-b6f6-2ee9cfbe1e17"
+    },
+    "key_vault_certificatesPermissions": {
+      "value": [
+        "Get",
+        "List",
+        "Update",
+        "Create",
+        "Import",
+        "Delete",
+        "Recover",
+        "Backup",
+        "Restore",
+        "ManageContacts",
+        "ManageIssuers",
+        "GetIssuers",
+        "ListIssuers",
+        "SetIssuers",
+        "DeleteIssuers"
+      ]
+    },
+    "key_vault_keysPermissions": {
+      "value": [
+        "Get",
+        "List",
+        "Update",
+        "Create",
+        "Import",
+        "Delete",
+        "Recover",
+        "Backup",
+        "Restore"
+      ]
+    },
+    "key_vault_secretsPermissions": {
+      "value": [
+        "Get",
+        "List",
+        "Set",
+        "Delete",
+        "Recover",
+        "Backup",
+        "Restore"
+      ]
+    },
+    "key_vault_networkAcls": {
+      "value": {
+        "defaultAction": "Allow",
+        "bypass": "AzureServices",
+        "virtualNetworkRules": [],
+        "ipRules": []
+      }
+    },
+    "key_vault_sku": {
+      "value": "Standard"
+    },
+    "key_vault_enabledForTemplateDeployment": {
+      "value": true
+    },
+    // Azure Application Insights
+    "application_insights_name": {
+      "value": "ummati-staging"
+    },
+    "application_insights_kind": {
+      "value": "web"
+    },
+    "application_insights_type": {
+      "value": "web"
+    },
+    "application_insights_samplingPercentage": {
+      "value": 100
+    },
+    // Azure Log Analytics
+    "log_analytics_name": {
+      "value": "ummati-staging"
+    },
+    "log_analytics_workspaceId": {
+      "value": "/subscriptions/dc01c77f-7452-4828-b574-3330cfbc06df/resourceGroups/Ummati-Staging-WestEurope/providers/Microsoft.OperationalInsights/workspaces/ummati-staging"
+    },
+    "log_analytics_sku": {
+      "value": "free"
+    },
+    "log_analytics_retentionInDays": {
+      "value": 7
+    },
+    // Azure Kubernetes Service
+    "kubernetes_name": {
+      "value": "ummati-staging"
+    },
+    "kubernetes_dnsPrefix": {
+      "value": "ummati-staging"
+    },
+    "kubernetes_osDiskSizeGB": {
+      "value": 30
+    },
+    "kubernetes_agentCount": {
+      "value": 1
+    },
+    "kubernetes_agentVMSize": {
+      "value": "Standard_B2s"
+    },
+    "kubernetes_maxPods": {
+      "value": 30
+    },
+    "kubernetes_kubernetesVersion": {
+      "value": "1.11.3"
+    },
+    "kubernetes_enableRBAC": {
+      "value": true
+    },
+    "kubernetes_servicePrincipalClientId": {
+      "reference": {
+        "keyVault": {
+          // This does not currently work, see https://github.com/Azure/azure-quickstart-templates/issues/2036
+          //[resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.KeyVault/vaults', parameters('key_vault_name'))]
+          "id": "/subscriptions/dc01c77f-7452-4828-b574-3330cfbc06df/resourcegroups/Ummati-Staging-WestEurope/providers/Microsoft.KeyVault/vaults/ummati-staging"
+        },
+        "secretName": "AzureKubernetesServiceServicePrincipalClientId"
+      }
+    },
+    "kubernetes_servicePrincipalClientSecret": {
+      "reference": {
+        "keyVault": {
+          // This does not currently work, see https://github.com/Azure/azure-quickstart-templates/issues/2036
+          //[resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.KeyVault/vaults', parameters('key_vault_name'))]
+          "id": "/subscriptions/dc01c77f-7452-4828-b574-3330cfbc06df/resourcegroups/Ummati-Staging-WestEurope/providers/Microsoft.KeyVault/vaults/ummati-staging"
+        },
+        "secretName": "AzureKubernetesServiceServicePrincipalClientSecret"
+      }
+    }
+  }
+}

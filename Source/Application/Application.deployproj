@@ -24,6 +24,7 @@
   <!-- vertag<:>end -->
   <ItemGroup>
     <Content Include="application.json" />
+    <Content Include="staging.parameters.json" />
     <Content Include="production.parameters.json" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
