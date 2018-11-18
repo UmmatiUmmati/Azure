@@ -1,8 +1,12 @@
 {
-  // Run the following command to create the service principal
+  // Run the following command to create the service principal.
   // az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/<Subscription ID>/resourceGroups/<Resource Group Name>"
   // Store the Client ID and Client Secret in Azure Key Vault as:
   // AzureKubernetesServiceServicePrincipalClientId and AzureKubernetesServiceServicePrincipalClientSecret
+  //
+  // Run the following command to give AKS access to ACR.
+  // az acr show --resource-group <Resource Group Name> --name <ACR Name> --query "id" --output tsv
+  // az role assignment create --assignee <appId> --scope <ACR Resource ID> --role Reader
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
