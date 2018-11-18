@@ -260,7 +260,7 @@
       "type": "int"
     },
     "kubernetes_kubernetesVersion": {
-      "defaultValue": "1.11.3",
+      "defaultValue": "1.11.4",
       "metadata": {
         "description": "The version of Kubernetes."
       },
