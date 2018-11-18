@@ -1,25 +1,40 @@
-# Instructions
+# Creating a new Deployment
 
-When deploying to an existing cluster, deploy as normal. When deploying to a new cluster, follow these steps:
+When deploying to a new cluster, follow these steps:
 
-1. Delete all Kubernetes resources from `application.json` and the `<environment>.parameters.json` file.
-2. Run the following command to create a service principal:
+1. Run the following command to create a service principal:
 
 ```
 az ad sp create-for-rbac --name "ummati-<Environment>" --role="Contributor" --scopes="/subscriptions/<Subscription ID>/resourceGroups/<Resource Group Name>"
 ```
 
-3. Store the Client ID and Client Secret in the newly created Azure Key Vault as:
+2. Comment out the following parameters in `<Environment>.parameters.json`:
 
 ```
-AzureKubernetesServiceServicePrincipalClientId
-AzureKubernetesServiceServicePrincipalClientSecret
+kubernetes_servicePrincipalClientId
+kubernetes_servicePrincipalClientSecret
 ```
 
-4. Bring back all Kubernetes resources in `application.json` and the `<environment>.parameters.json` file.
-5. Run the following command to give AKS access to ACR:
+3. Run the ARM template deployment.
+
+4. Run the following command to give Azure Kubernetes Service (AKS) access to Azure Container Registry (ACR):
 
 ```
 az acr show --resource-group <Resource Group Name> --name <ACR Name> --query "id" --output tsv
 az role assignment create --assignee <Client ID> --scope <ACR Resource ID> --role Reader
+```
+
+5. Uncomment the following parameters in `<Environment>.parameters.json` to use Azure Key Vault to retrieve them for future deployments of the same resource.
+
+```
+kubernetes_servicePrincipalClientId
+kubernetes_servicePrincipalClientSecret
+```
+
+# Upgrading Kubernetes
+
+Get a list of the Kubernetes versions available:
+
+```
+az aks get-upgrades --resource-group <Resource Group Name> --name <Cluster Name> --output table
 ```

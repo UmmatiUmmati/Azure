@@ -383,6 +383,34 @@
       }
     },
     {
+      "comments": "Azure Key Vault Secret (Kubernetes Service Principal Client ID)",
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(parameters('key_vault_name'), '/KubernetesServiceServicePrincipalClientId')]",
+      "apiVersion": "2015-06-01",
+      "dependsOn": [
+        "[variables('key_vault_resourceId')]",
+        "[variables('kubernetes_resourceId')]"
+      ],
+      "properties": {
+        "contentType": "text/plain",
+        "value": "[variables('kubernetes_servicePrincipalClientId')]"
+      }
+    },
+    {
+      "comments": "Azure Key Vault Secret (Kubernetes Service Principal Client Secret)",
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(parameters('key_vault_name'), '/KubernetesServiceServicePrincipalClientSecret')]",
+      "apiVersion": "2015-06-01",
+      "dependsOn": [
+        "[variables('key_vault_resourceId')]",
+        "[variables('kubernetes_resourceId')]"
+      ],
+      "properties": {
+        "contentType": "text/plain",
+        "value": "[variables('kubernetes_servicePrincipalClientSecret')]"
+      }
+    },
+    {
       "comments": "Azure Application Insights",
       "type": "microsoft.insights/components",
       "name": "[parameters('application_insights_name')]",
