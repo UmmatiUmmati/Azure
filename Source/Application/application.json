@@ -542,6 +542,10 @@
     "kubernetes_server": {
       "type": "string",
       "value": "[reference(variables('kubernetes_resourceId')).fqdn]"
+    },
+    "kubernetes_ssh": {
+      "type": "string",
+      "value": "[concat('ssh ', parameters('kubernetes_adminUsername'), '@', reference(variables('kubernetes_resourceId')).fqdn, ' -A -p 22')]"
     }
   }
 }
