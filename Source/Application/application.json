@@ -279,6 +279,18 @@
       },
       "type": "bool"
     },
+    //"kubernetes_adminUsername": {
+    //  "type": "string",
+    //  "metadata": {
+    //    "description": "User name for the Linux Virtual Machines."
+    //  }
+    //},
+    //"kubernetes_sshPublicKey": {
+    //  "type": "securestring",
+    //  "metadata": {
+    //    "description": "Configure all linux machines with the SSH RSA public key string.  Your key should include three parts, for example 'ssh-rsa AAAAB...snip...UcyupgH azureuser@linuxvm'"
+    //  }
+    //},
     "kubernetes_servicePrincipalClientId": {
       "defaultValue": null,
       "metadata": {
@@ -499,6 +511,16 @@
             "maxPods": "[parameters('kubernetes_maxPods')]"
           }
         ],
+        //"linuxProfile": {
+        //  "adminUsername": "[parameters('kubernetes_adminUsername')]",
+        //  "ssh": {
+        //    "publicKeys": [
+        //      {
+        //        "keyData": "[parameters('kubernetes_sshPublicKey')]"
+        //      }
+        //    ]
+        //  }
+        //},
         "servicePrincipalProfile": {
           "ClientId": "[parameters('kubernetes_servicePrincipalClientId')]",
           "Secret": "[parameters('kubernetes_servicePrincipalClientSecret')]"
