@@ -400,7 +400,7 @@
       // https://docs.microsoft.com/en-us/azure/templates/microsoft.keyvault/allversions
       "comments": "Azure Key Vault Secret (Kubernetes Service Principal Client ID)",
       "type": "Microsoft.KeyVault/vaults/secrets",
-      "name": "[concat(parameters('key_vault_name'), '/KubernetesServiceServicePrincipalClientId')]",
+      "name": "[concat(parameters('key_vault_name'), '/KubernetesServicePrincipalClientId')]",
       "apiVersion": "2018-02-14",
       "dependsOn": [
         "[variables('key_vault_resourceId')]",
@@ -415,7 +415,7 @@
       // https://docs.microsoft.com/en-us/azure/templates/microsoft.keyvault/allversions
       "comments": "Azure Key Vault Secret (Kubernetes Service Principal Client Secret)",
       "type": "Microsoft.KeyVault/vaults/secrets",
-      "name": "[concat(parameters('key_vault_name'), '/KubernetesServiceServicePrincipalClientSecret')]",
+      "name": "[concat(parameters('key_vault_name'), '/KubernetesServicePrincipalClientSecret')]",
       "apiVersion": "2018-02-14",
       "dependsOn": [
         "[variables('key_vault_resourceId')]",
