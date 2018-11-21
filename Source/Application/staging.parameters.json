@@ -127,7 +127,7 @@
           //[resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.KeyVault/vaults', parameters('key_vault_name'))]
           "id": "/subscriptions/dc01c77f-7452-4828-b574-3330cfbc06df/resourcegroups/Ummati-Staging-WestEurope/providers/Microsoft.KeyVault/vaults/ummati-staging"
         },
-        "secretName": "KubernetesServicePrincipalClientId"
+        "secretName": "KubernetesServiceServicePrincipalClientId"
       }
     },
     "kubernetes_servicePrincipalClientSecret": {
@@ -137,7 +137,7 @@
           //[resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.KeyVault/vaults', parameters('key_vault_name'))]
           "id": "/subscriptions/dc01c77f-7452-4828-b574-3330cfbc06df/resourcegroups/Ummati-Staging-WestEurope/providers/Microsoft.KeyVault/vaults/ummati-staging"
         },
-        "secretName": "KubernetesServicePrincipalClientSecret"
+        "secretName": "KubernetesServiceServicePrincipalClientSecret"
       }
     }
   }
