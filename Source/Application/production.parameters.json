@@ -108,8 +108,10 @@
     "kubernetes_agentCount": {
       "value": 1
     },
+    // Kubernetes reserves 60ms CPU and 20% up to 4 GB of Memory for itself.
+    // See https://docs.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#resource-reservations
     "kubernetes_agentVMSize": {
-      "value": "Standard_B2s"
+      "value": "Standard_B2s" // 2 CPU's, 4GB RAM (3276MB Remaining), 8GB SSD
     },
     "kubernetes_maxPods": {
       "value": 30
