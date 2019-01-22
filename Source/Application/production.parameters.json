@@ -117,7 +117,7 @@
       "value": 30
     },
     "kubernetes_kubernetesVersion": {
-      "value": "1.11.4"
+      "value": "1.11.5"
     },
     "kubernetes_enableRBAC": {
       "value": true
