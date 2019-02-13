@@ -116,8 +116,10 @@
     "kubernetes_maxPods": {
       "value": 30
     },
+    // Check for upgrades using:
+    // az aks get-upgrades --resource-group Ummati-Production-WestEurope --name ummati-production
     "kubernetes_kubernetesVersion": {
-      "value": "1.12.4"
+      "value": "1.12.5"
     },
     "kubernetes_enableRBAC": {
       "value": true
