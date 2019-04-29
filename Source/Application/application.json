@@ -530,8 +530,8 @@
         //  }
         //},
         "servicePrincipalProfile": {
-          "ClientId": "[parameters('kubernetes_servicePrincipalClientId')]",
-          "Secret": "[parameters('kubernetes_servicePrincipalClientSecret')]"
+          "clientId": "[parameters('kubernetes_servicePrincipalClientId')]",
+          "secret": "[parameters('kubernetes_servicePrincipalClientSecret')]"
         },
         "networkProfile": {
           "networkPlugin": "[parameters('kubernetes_networkPlugin')]"
