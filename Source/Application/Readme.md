@@ -1,8 +1,10 @@
-# Creating a new Deployment
+# Azure
+
+## Creating a new Deployment
 
 When deploying to a new cluster, follow these steps:
 
-1. Run the following command to create a service principal:
+1. Run the following command to create a service principal and make note of the client ID and client secret:
 
 ```bash
 az ad sp create-for-rbac --name "ummati-<Environment>" --role="Contributor" --scopes="/subscriptions/<Subscription ID>/resourceGroups/<Resource Group Name>"
@@ -15,7 +17,7 @@ kubernetes_servicePrincipalClientId
 kubernetes_servicePrincipalClientSecret
 ```
 
-3. Run the ARM template deployment.
+3. Run the ARM template deployment with the client ID and client secret from above.
 
 4. Run the following command to give Azure Kubernetes Service (AKS) access to Azure Container Registry (ACR):
 
@@ -31,7 +33,13 @@ kubernetes_servicePrincipalClientId
 kubernetes_servicePrincipalClientSecret
 ```
 
-# Upgrading Kubernetes
+## Deleting a Deployment
+
+1. Delete the `<Resource Group Name>` resource group.
+2. Delete the `Kubernetes-<Resource Group Name>` resource group.
+3. Delete the Azure Active Directory application called `ummati-<Environment>`.
+
+## Upgrading Kubernetes
 
 Get a list of the Kubernetes versions available:
 
