@@ -422,36 +422,36 @@
         "value": "[reference(variables('kubernetes_resourceId')).fqdn]"
       }
     },
-    //{
-    //  // https://docs.microsoft.com/en-us/azure/templates/microsoft.keyvault/allversions
-    //  "comments": "Azure Key Vault Secret (Kubernetes Service Principal Client ID)",
-    //  "type": "Microsoft.KeyVault/vaults/secrets",
-    //  "name": "[concat(parameters('key_vault_name'), '/KubernetesServicePrincipalClientId')]",
-    //  "apiVersion": "2018-02-14",
-    //  "dependsOn": [
-    //    "[variables('key_vault_resourceId')]",
-    //    "[variables('kubernetes_resourceId')]"
-    //  ],
-    //  "properties": {
-    //    "contentType": "text/plain",
-    //    "value": "[variables('kubernetes_servicePrincipalClientId')]"
-    //  }
-    //},
-    //{
-    //  // https://docs.microsoft.com/en-us/azure/templates/microsoft.keyvault/allversions
-    //  "comments": "Azure Key Vault Secret (Kubernetes Service Principal Client Secret)",
-    //  "type": "Microsoft.KeyVault/vaults/secrets",
-    //  "name": "[concat(parameters('key_vault_name'), '/KubernetesServicePrincipalClientSecret')]",
-    //  "apiVersion": "2018-02-14",
-    //  "dependsOn": [
-    //    "[variables('key_vault_resourceId')]",
-    //    "[variables('kubernetes_resourceId')]"
-    //  ],
-    //  "properties": {
-    //    "contentType": "text/plain",
-    //    "value": "[variables('kubernetes_servicePrincipalClientSecret')]"
-    //  }
-    //},
+    {
+     // https://docs.microsoft.com/en-us/azure/templates/microsoft.keyvault/allversions
+     "comments": "Azure Key Vault Secret (Kubernetes Service Principal Client ID)",
+     "type": "Microsoft.KeyVault/vaults/secrets",
+     "name": "[concat(parameters('key_vault_name'), '/KubernetesServicePrincipalClientId')]",
+     "apiVersion": "2018-02-14",
+     "dependsOn": [
+       "[variables('key_vault_resourceId')]",
+       "[variables('kubernetes_resourceId')]"
+     ],
+     "properties": {
+       "contentType": "text/plain",
+       "value": "[parameters('kubernetes_servicePrincipalClientId')]"
+     }
+    },
+    {
+     // https://docs.microsoft.com/en-us/azure/templates/microsoft.keyvault/allversions
+     "comments": "Azure Key Vault Secret (Kubernetes Service Principal Client Secret)",
+     "type": "Microsoft.KeyVault/vaults/secrets",
+     "name": "[concat(parameters('key_vault_name'), '/KubernetesServicePrincipalClientSecret')]",
+     "apiVersion": "2018-02-14",
+     "dependsOn": [
+       "[variables('key_vault_resourceId')]",
+       "[variables('kubernetes_resourceId')]"
+     ],
+     "properties": {
+       "contentType": "text/plain",
+       "value": "[parameters('kubernetes_servicePrincipalClientSecret')]"
+     }
+    },
     {
       // https://docs.microsoft.com/en-us/azure/templates/microsoft.insights/components
       "comments": "Azure Application Insights",
@@ -525,7 +525,7 @@
         "dnsPrefix": "[parameters('kubernetes_dnsPrefix')]",
         "nodeResourceGroup": "[concat('Kubernetes-', resourceGroup().name)]",
         "enableRBAC": "[parameters('kubernetes_enableRBAC')]",
-        "enablePodSecurityPolicy": "[parameters('kubernetes_enablePodSecurityPolicy')]",
+        // "enablePodSecurityPolicy": "[parameters('kubernetes_enablePodSecurityPolicy')]",
         "addonProfiles": {
           "httpApplicationRouting": {
             "enabled": "[parameters('kubernetes_enableHttpApplicationRouting')]"
@@ -539,18 +539,22 @@
         },
         "agentPoolProfiles": [
           {
-            "name": "MainAgentPool",
+            "name": "main",
             "count": "[parameters('kubernetes_mainAgentPool_agentCount')]",
-            "enableAutoScaling": "[parameters('kubernetes_mainAgentPool_enableAutoScaling')]",
-            "maxCount": "[parameters('kubernetes_mainAgentPool_maxCount')]",
-            "minCount": "[parameters('kubernetes_mainAgentPool_minCount')]",
+            // "enableAutoScaling": "[parameters('kubernetes_mainAgentPool_enableAutoScaling')]",
+            // "maxCount": "[parameters('kubernetes_mainAgentPool_maxCount')]",
+            // "minCount": "[parameters('kubernetes_mainAgentPool_minCount')]",
             "maxPods": "[parameters('kubernetes_mainAgentPool_maxPods')]",
+            // "type": "VirtualMachineScaleSets",
             "osDiskSizeGB": "[parameters('kubernetes_mainAgentPool_osDiskSizeGB')]",
             "osType": "[parameters('kubernetes_mainAgentPool_osType')]",
-            "vmSize": "[parameters('kubernetes_mainAgentPool_agentVMSize')]",
-            "storageProfile": "ManagedDisks"
+            "vmSize": "[parameters('kubernetes_mainAgentPool_agentVMSize')]"
           }
         ],
+        // "apiServerAuthorizedIPRanges": [
+        //   "20.42.25.196/32",
+        //   "172.0.0.10/16",
+        // ],
         //"linuxProfile": {
         //  "adminUsername": "[parameters('kubernetes_adminUsername')]",
         //  "ssh": {
