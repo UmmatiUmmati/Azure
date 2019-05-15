@@ -217,16 +217,44 @@
       },
       "type": "string"
     },
-    "kubernetes_agentCount": {
+    "kubernetes_mainAgentPool_agentCount": {
       "defaultValue": 3,
       "metadata": {
         "description": "The number of agents for the cluster."
       },
-      "maxValue": 50,
+      "maxValue": 999,
       "minValue": 1,
       "type": "int"
     },
-    "kubernetes_osDiskSizeGB": {
+    "kubernetes_mainAgentPool_enableAutoScaling": {
+      "defaultValue": true,
+      "metadata": {
+        "description": "Whether to enable auto-scaler."
+      },
+      "type": "bool"
+    },
+    "kubernetes_mainAgentPool_maxCount": {
+      "defaultValue": 1,
+      "metadata": {
+        "description": "Maximum number of nodes for auto-scaling."
+      },
+      "type": "int"
+    },
+    "kubernetes_mainAgentPool_minCount": {
+      "defaultValue": 1,
+      "metadata": {
+        "description": "Minimum number of nodes for auto-scaling."
+      },
+      "type": "int"
+    },
+    "kubernetes_mainAgentPool_maxPods": {
+      "defaultValue": 30,
+      "metadata": {
+        "description": "Maximum number of pods that can run on a node."
+      },
+      "type": "int"
+    },
+    "kubernetes_mainAgentPool_osDiskSizeGB": {
       "defaultValue": 0,
       "metadata": {
         "description": "Disk size (in GB) to provision for each of the agent pool nodes. This value ranges from 0 to 1023. Specifying 0 will apply the default disk size for that agentVMSize."
@@ -235,7 +263,7 @@
       "minValue": 0,
       "type": "int"
     },
-    "kubernetes_osType": {
+    "kubernetes_mainAgentPool_osType": {
       "allowedValues": [
         "Linux"
       ],
@@ -245,19 +273,12 @@
       },
       "type": "string"
     },
-    "kubernetes_agentVMSize": {
+    "kubernetes_mainAgentPool_agentVMSize": {
       "defaultValue": "Standard_D2_v2",
       "metadata": {
         "description": "The size of the Virtual Machine."
       },
       "type": "string"
-    },
-    "kubernetes_maxPods": {
-      "defaultValue": 30,
-      "metadata": {
-        "description": "Maximum number of pods that can run on a node."
-      },
-      "type": "int"
     },
     "kubernetes_kubernetesVersion": {
       "metadata": {
@@ -268,7 +289,14 @@
     "kubernetes_enableRBAC": {
       "defaultValue": true,
       "metadata": {
-        "description": "boolean flag to turn on and off of RBAC"
+        "description": "Whether to enable Kubernetes Role-Based Access Control."
+      },
+      "type": "bool"
+    },
+    "kubernetes_enablePodSecurityPolicy": {
+      "defaultValue": true,
+      "metadata": {
+        "description": "Whether to enable Kubernetes Pod security policy."
       },
       "type": "bool"
     },
@@ -486,7 +514,7 @@
       "comments": "Azure Kubernetes Service",
       "type": "Microsoft.ContainerService/managedClusters",
       "name": "[parameters('kubernetes_name')]",
-      "apiVersion": "2018-03-31",
+      "apiVersion": "2019-02-01",
       "location": "[parameters('kubernetes_location')]",
       "dependsOn": [
         "[variables('container_insights_resourceId')]",
@@ -497,6 +525,7 @@
         "dnsPrefix": "[parameters('kubernetes_dnsPrefix')]",
         "nodeResourceGroup": "[concat('Kubernetes-', resourceGroup().name)]",
         "enableRBAC": "[parameters('kubernetes_enableRBAC')]",
+        "enablePodSecurityPolicy": "[parameters('kubernetes_enablePodSecurityPolicy')]",
         "addonProfiles": {
           "httpApplicationRouting": {
             "enabled": "[parameters('kubernetes_enableHttpApplicationRouting')]"
@@ -510,13 +539,16 @@
         },
         "agentPoolProfiles": [
           {
-            "name": "agentpool",
-            "count": "[parameters('kubernetes_agentCount')]",
-            "osDiskSizeGB": "[parameters('kubernetes_osDiskSizeGB')]",
-            "osType": "[parameters('kubernetes_osType')]",
-            "vmSize": "[parameters('kubernetes_agentVMSize')]",
-            "storageProfile": "ManagedDisks",
-            "maxPods": "[parameters('kubernetes_maxPods')]"
+            "name": "MainAgentPool",
+            "count": "[parameters('kubernetes_mainAgentPool_agentCount')]",
+            "enableAutoScaling": "[parameters('kubernetes_mainAgentPool_enableAutoScaling')]",
+            "maxCount": "[parameters('kubernetes_mainAgentPool_maxCount')]",
+            "minCount": "[parameters('kubernetes_mainAgentPool_minCount')]",
+            "maxPods": "[parameters('kubernetes_mainAgentPool_maxPods')]",
+            "osDiskSizeGB": "[parameters('kubernetes_mainAgentPool_osDiskSizeGB')]",
+            "osType": "[parameters('kubernetes_mainAgentPool_osType')]",
+            "vmSize": "[parameters('kubernetes_mainAgentPool_agentVMSize')]",
+            "storageProfile": "ManagedDisks"
           }
         ],
         //"linuxProfile": {

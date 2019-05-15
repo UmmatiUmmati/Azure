@@ -102,19 +102,22 @@
     "kubernetes_dnsPrefix": {
       "value": "ummati-production"
     },
-    "kubernetes_osDiskSizeGB": {
+    "kubernetes_mainAgentPool_agentCount": {
+      "value": 1
+    },
+    "kubernetes_mainAgentPool_maxCount": {
+      "value": 2
+    },
+    "kubernetes_mainAgentPool_maxPods": {
       "value": 30
     },
-    "kubernetes_agentCount": {
-      "value": 1
+    "kubernetes_mainAgentPool_osDiskSizeGB": {
+      "value": 30
     },
     // Kubernetes reserves 60ms CPU and 20% up to 4 GB of Memory for itself.
     // See https://docs.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#resource-reservations
-    "kubernetes_agentVMSize": {
+    "kubernetes_mainAgentPool_agentVMSize": {
       "value": "Standard_B2s" // 2 CPU's, 4GB RAM (3276MB Remaining), 8GB SSD
-    },
-    "kubernetes_maxPods": {
-      "value": 30
     },
     // Check for upgrades using:
     // az aks get-upgrades --resource-group Ummati-Production-WestEurope --name ummati-production
