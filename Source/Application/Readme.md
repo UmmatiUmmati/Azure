@@ -33,6 +33,16 @@ kubernetes_servicePrincipalClientId
 kubernetes_servicePrincipalClientSecret
 ```
 
+6. Deploy the Helm charts.
+
+7. Run this command to see what IP address the external services are running on.
+
+```bash
+kubectl get services --all-namespaces
+```
+
+8. Update Cloudflare DNS entries to point to the new IP addresses.
+
 ## Deleting a Deployment
 
 1. Delete the `<Resource Group Name>` resource group.
