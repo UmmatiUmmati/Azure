@@ -257,7 +257,7 @@
     "kubernetes_mainAgentPool_osDiskSizeGB": {
       "defaultValue": 0,
       "metadata": {
-        "description": "Disk size (in GB) to provision for each of the agent pool nodes. This value ranges from 0 to 1023. Specifying 0 will apply the default disk size for that agentVMSize."
+        "description": "Disk size (in GiB) to provision for each of the agent pool nodes. This value ranges from 0 to 1023. Specifying 0 will apply the default disk size for that agentVMSize."
       },
       "maxValue": 1023,
       "minValue": 0,
@@ -514,7 +514,7 @@
       "comments": "Azure Kubernetes Service",
       "type": "Microsoft.ContainerService/managedClusters",
       "name": "[parameters('kubernetes_name')]",
-      "apiVersion": "2019-02-01",
+      "apiVersion": "2019-04-01",
       "location": "[parameters('kubernetes_location')]",
       "dependsOn": [
         "[variables('container_insights_resourceId')]",
@@ -548,6 +548,7 @@
             // "type": "VirtualMachineScaleSets",
             "osDiskSizeGB": "[parameters('kubernetes_mainAgentPool_osDiskSizeGB')]",
             "osType": "[parameters('kubernetes_mainAgentPool_osType')]",
+            "storageProfile": "ManagedDisks",
             "vmSize": "[parameters('kubernetes_mainAgentPool_agentVMSize')]"
           }
         ],
@@ -583,7 +584,7 @@
       "type": "securestring",
       "value": "[reference(variables('application_insights_resourceId'), '2014-04-01').InstrumentationKey]"
     },
-    "kubernetes_server": {
+    "kubernetes_fqdn": {
       "type": "string",
       "value": "[reference(variables('kubernetes_resourceId')).fqdn]"
     }
