@@ -55,13 +55,19 @@ kubernetes_servicePrincipalClientSecret
 
 6. Deploy the Helm charts.
 
-7. Run this command to see what IP address the external services are running on.
+7. Connect to Azure Kubernetes Service.
+
+```bash
+az aks get-credentials --resource-group <Resource Group Name> --name <AKS Name>
+```
+
+8. Run this command to see what IP address the external services are running on.
 
 ```bash
 kubectl get services --all-namespaces
 ```
 
-8. Update Cloudflare DNS entries to point to the new IP addresses.
+9. Update Cloudflare DNS entries to point to the new IP addresses.
 
 ### Deleting a Deployment
 
