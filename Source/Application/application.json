@@ -561,7 +561,7 @@
         },
         "agentPoolProfiles": [
           {
-            "name": "main",
+            "name": "Main",
             "count": "[parameters('kubernetes_mainAgentPool_agentCount')]",
             // "enableAutoScaling": "[parameters('kubernetes_mainAgentPool_enableAutoScaling')]",
             // "maxCount": "[parameters('kubernetes_mainAgentPool_maxCount')]",
@@ -572,6 +572,23 @@
             "osType": "[parameters('kubernetes_mainAgentPool_osType')]",
             "storageProfile": "ManagedDisks",
             "vmSize": "[parameters('kubernetes_mainAgentPool_agentVMSize')]"
+
+            // Low Priority (Cheap) Virtual Machine Scale Set
+            // {
+            //   "name": "LowPriority",
+            //   "count": "[parameters('kubernetes_mainAgentPool_agentCount')]",
+            //   "enableAutoScaling": "[parameters('kubernetes_mainAgentPool_enableAutoScaling')]",
+            //   "maxCount": "[parameters('kubernetes_mainAgentPool_maxCount')]",
+            //   "minCount": "[parameters('kubernetes_mainAgentPool_minCount')]",
+            //   "maxPods": "[parameters('kubernetes_mainAgentPool_maxPods')]",
+            //   "type": "VirtualMachineScaleSets",
+            //   "osDiskSizeGB": "[parameters('kubernetes_mainAgentPool_osDiskSizeGB')]",
+            //   "osType": "[parameters('kubernetes_mainAgentPool_osType')]",
+            //   "scaleSetEvictionPolicy": "Delete",
+            //   "scaleSetPriority": "Low",
+            //   "storageProfile": "ManagedDisks",
+            //   "vmSize": "[parameters('kubernetes_mainAgentPool_agentVMSize')]"
+            // }
           }
         ],
         // "apiServerAuthorizedIPRanges": [
