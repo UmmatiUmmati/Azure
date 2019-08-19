@@ -331,6 +331,17 @@
       },
       "type": "securestring"
     },
+    "kubernetes_loadBalancerSku": {
+      "allowedValues": [
+        "basic",
+        "standard"
+      ],
+      "defaultValue": "basic",
+      "metadata": {
+        "description": "The load balancer sku for the managed cluster."
+      },
+      "type": "string"
+    },
     "kubernetes_networkPlugin": {
       "allowedValues": [
         "azure",
@@ -582,8 +593,9 @@
           "secret": "[parameters('kubernetes_servicePrincipalClientSecret')]"
         },
         "networkProfile": {
+          "loadBalancerSku": "[parameters('kubernetes_loadBalancerSku')]",
           "networkPlugin": "[parameters('kubernetes_networkPlugin')]",
-          "networkPolicy": "[parameters('kubernetes_networkPolicy')]",
+          "networkPolicy": "[parameters('kubernetes_networkPolicy')]"
         }
       },
       "tags": {
