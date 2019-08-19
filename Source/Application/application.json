@@ -342,6 +342,17 @@
       },
       "type": "string"
     },
+    "kubernetes_networkPolicy": {
+      "allowedValues": [
+        "azure",
+        "calico"
+      ],
+      "defaultValue": "calico",
+      "metadata": {
+        "description": "Network policy used for building Kubernetes network."
+      },
+      "type": "string"
+    },
     "kubernetes_enableOmsAgent": {
       "defaultValue": true,
       "metadata": {
@@ -571,7 +582,8 @@
           "secret": "[parameters('kubernetes_servicePrincipalClientSecret')]"
         },
         "networkProfile": {
-          "networkPlugin": "[parameters('kubernetes_networkPlugin')]"
+          "networkPlugin": "[parameters('kubernetes_networkPlugin')]",
+          "networkPolicy": "[parameters('kubernetes_networkPolicy')]",
         }
       },
       "tags": {
