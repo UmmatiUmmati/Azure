@@ -561,7 +561,7 @@
         },
         "agentPoolProfiles": [
           {
-            "name": "Main",
+            "name": "main",
             "count": "[parameters('kubernetes_mainAgentPool_agentCount')]",
             // "enableAutoScaling": "[parameters('kubernetes_mainAgentPool_enableAutoScaling')]",
             // "maxCount": "[parameters('kubernetes_mainAgentPool_maxCount')]",
@@ -575,7 +575,7 @@
 
             // Low Priority (Cheap) Virtual Machine Scale Set
             // {
-            //   "name": "LowPriority",
+            //   "name": "low-priority",
             //   "count": "[parameters('kubernetes_mainAgentPool_agentCount')]",
             //   "enableAutoScaling": "[parameters('kubernetes_mainAgentPool_enableAutoScaling')]",
             //   "maxCount": "[parameters('kubernetes_mainAgentPool_maxCount')]",
