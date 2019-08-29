@@ -204,7 +204,7 @@
       ],
       "properties": {
         "contentType": "text/plain",
-        "value": "[reference(variables('container_registry_resourceId'), '2017-10-01').loginServer]"
+        "value": "[reference(variables('container_registry_resourceId'), '2019-05-01').loginServer]"
       }
     },
     {
@@ -219,7 +219,7 @@
       ],
       "properties": {
         "contentType": "text/plain",
-        "value": "[listCredentials(variables('container_registry_resourceId'), '2017-10-01').username]"
+        "value": "[listCredentials(variables('container_registry_resourceId'), '2019-05-01').username]"
       }
     },
     {
@@ -234,7 +234,7 @@
       ],
       "properties": {
         "contentType": "text/plain",
-        "value": "[listCredentials(variables('container_registry_resourceId'), '2017-10-01').passwords[0].value]"
+        "value": "[listCredentials(variables('container_registry_resourceId'), '2019-05-01').passwords[0].value]"
       }
     },
     {
@@ -249,11 +249,11 @@
       ],
       "properties": {
         "contentType": "text/plain",
-        "value": "[listCredentials(variables('container_registry_resourceId'), '2017-10-01').passwords[1].value]"
+        "value": "[listCredentials(variables('container_registry_resourceId'), '2019-05-01').passwords[1].value]"
       }
     },
     {
-      // https://docs.microsoft.com/en-us/azure/templates/microsoft.containerregistry/2017-10-01/registries
+      // https://docs.microsoft.com/en-us/azure/templates/microsoft.containerregistry/2019-05-01/registries
       "comments": "Azure Container Registry",
       "type": "Microsoft.ContainerRegistry/registries",
       "name": "[parameters('container_registry_name')]",
@@ -275,19 +275,19 @@
   "outputs": {
     "container_registry_server": {
       "type": "string",
-      "value": "[reference(variables('container_registry_resourceId'), '2017-10-01').loginServer]"
+      "value": "[reference(variables('container_registry_resourceId'), '2019-05-01').loginServer]"
     },
     "container_registry_username": {
       "type": "securestring",
-      "value": "[listCredentials(variables('container_registry_resourceId'), '2017-10-01').username]"
+      "value": "[listCredentials(variables('container_registry_resourceId'), '2019-05-01').username]"
     },
     "container_registry_password1": {
       "type": "securestring",
-      "value": "[listCredentials(variables('container_registry_resourceId'), '2017-10-01').passwords[0].value]"
+      "value": "[listCredentials(variables('container_registry_resourceId'), '2019-05-01').passwords[0].value]"
     },
     "container_registry_password2": {
       "type": "securestring",
-      "value": "[listCredentials(variables('container_registry_resourceId'), '2017-10-01').passwords[1].value]"
+      "value": "[listCredentials(variables('container_registry_resourceId'), '2019-05-01').passwords[1].value]"
     }
   }
 }
