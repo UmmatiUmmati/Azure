@@ -426,7 +426,7 @@
       ],
       "properties": {
         "contentType": "text/plain",
-        "value": "[reference(variables('application_insights_resourceId'), '2014-04-01').InstrumentationKey]"
+        "value": "[reference(variables('application_insights_resourceId'), '2015-05-01').InstrumentationKey]"
       }
     },
     {
@@ -510,7 +510,7 @@
       }
     },
     {
-      // https://docs.microsoft.com/en-us/azure/log-analytics/log-analytics-template-workspace-configuration
+      // https://docs.microsoft.com/en-us/azure/templates/microsoft.operationsmanagement/2015-11-01-preview/solutions
       "type": "Microsoft.OperationsManagement/solutions",
       "name": "[variables('container_insights_name')]",
       "apiVersion": "2015-11-01-preview",
@@ -532,11 +532,11 @@
       }
     },
     {
-      // https://docs.microsoft.com/en-us/azure/templates/microsoft.containerservice/2018-03-31/managedclusters
+      // https://docs.microsoft.com/en-us/azure/templates/microsoft.containerservice/2019-06-01/managedclusters
       "comments": "Azure Kubernetes Service",
       "type": "Microsoft.ContainerService/managedClusters",
       "name": "[parameters('kubernetes_name')]",
-      "apiVersion": "2019-04-01",
+      "apiVersion": "2019-06-01",
       "location": "[parameters('kubernetes_location')]",
       "dependsOn": [
         "[variables('container_insights_resourceId')]",
@@ -623,7 +623,7 @@
   "outputs": {
     "application_insights_instrumentationKey": {
       "type": "securestring",
-      "value": "[reference(variables('application_insights_resourceId'), '2014-04-01').InstrumentationKey]"
+      "value": "[reference(variables('application_insights_resourceId'), '2015-05-01').InstrumentationKey]"
     },
     "kubernetes_fqdn": {
       "type": "string",
