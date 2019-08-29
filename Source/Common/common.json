@@ -257,11 +257,10 @@
       "comments": "Azure Container Registry",
       "type": "Microsoft.ContainerRegistry/registries",
       "name": "[parameters('container_registry_name')]",
-      "apiVersion": "2017-10-01",
+      "apiVersion": "2019-05-01",
       "location": "[parameters('container_registry_location')]",
       "sku": {
-        "name": "[parameters('container_registry_sku')]",
-        "tier": "[parameters('container_registry_sku')]"
+        "name": "[parameters('container_registry_sku')]"
       },
       "scale": null,
       "dependsOn": [],
