@@ -1,5 +1,6 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  // https://github.com/Azure/azure-resource-manager-schemas
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json",
   "contentVersion": "1.0.0.0",
   "parameters": {
     "environment": {
@@ -477,7 +478,7 @@
     {
       // https://docs.microsoft.com/en-us/azure/templates/microsoft.insights/components
       "comments": "Azure Application Insights",
-      "type": "microsoft.insights/components",
+      "type": "Microsoft.Insights/components",
       "name": "[parameters('application_insights_name')]",
       "apiVersion": "2015-05-01",
       "location": "[parameters('application_insights_location')]",
@@ -486,7 +487,7 @@
         "Application_Type": "[parameters('application_insights_type')]",
         "Flow_Type": "Bluefield",
         "Request_Source": "rest",
-        "SamplingPercentage": "application_insights_samplingPercentage"
+        "SamplingPercentage": "[parameters('application_insights_samplingPercentage')]"
       },
       "tags": {
         "Environment": "[parameters('environment')]"
