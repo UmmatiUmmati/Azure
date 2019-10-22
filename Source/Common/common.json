@@ -113,6 +113,28 @@
       },
       "type": "bool"
     },
+    "key_vault_enableSoftDelete": {
+      "allowedValues": [
+        true,
+        false
+      ],
+      "defaultValue": true,
+      "metadata": {
+        "description": "Property to specify whether the 'soft delete' functionality is enabled for this key vault. It does not accept false value."
+      },
+      "type": "bool"
+    },
+    "key_vault_enablePurgeProtection": {
+      "allowedValues": [
+        true,
+        false
+      ],
+      "defaultValue": true,
+      "metadata": {
+        "description": "Property specifying whether protection against purge is enabled for this vault. Setting this property to true activates protection against purge for this vault and its content - only the Key Vault service may initiate a hard, irrecoverable deletion. The setting is effective only if soft delete is also enabled. Enabling this functionality is irreversible - that is, the property does not accept false as its value."
+      },
+      "type": "bool"
+    },
     // Azure Container Registry
     "container_registry_name": {
       "type": "string"
@@ -156,6 +178,8 @@
         "enabledForDeployment": "[parameters('key_vault_enabledForDeployment')]",
         "enabledForDiskEncryption": "[parameters('key_vault_enabledForDiskEncryption')]",
         "enabledForTemplateDeployment": "[parameters('key_vault_enabledForTemplateDeployment')]",
+        "enableSoftDelete": "[parameters('key_vault_enableSoftDelete')]",
+        "enablePurgeProtection": "[parameters('key_vault_enablePurgeProtection')]",
         "tenantId": "[parameters('key_vault_tenantId')]",
         "accessPolicies": [
           {
