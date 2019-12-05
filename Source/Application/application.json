@@ -588,11 +588,16 @@
           {
             "name": "main",
             "count": "[parameters('kubernetes_mainAgentPool_agentCount')]",
+            // "type": "VirtualMachineScaleSets",
+            // "availabilityZones": [
+            //   "1",
+            //   "2",
+            //   "3"
+            // ],
             // "enableAutoScaling": "[parameters('kubernetes_mainAgentPool_enableAutoScaling')]",
             // "maxCount": "[parameters('kubernetes_mainAgentPool_maxCount')]",
             // "minCount": "[parameters('kubernetes_mainAgentPool_minCount')]",
             "maxPods": "[parameters('kubernetes_mainAgentPool_maxPods')]",
-            // "type": "VirtualMachineScaleSets",
             "osDiskSizeGB": "[parameters('kubernetes_mainAgentPool_osDiskSizeGB')]",
             "osType": "[parameters('kubernetes_mainAgentPool_osType')]",
             "storageProfile": "ManagedDisks",
@@ -602,11 +607,16 @@
             // {
             //   "name": "low-priority",
             //   "count": "[parameters('kubernetes_mainAgentPool_agentCount')]",
+            //   "type": "VirtualMachineScaleSets",
+            //   "availabilityZones": [
+            //     "1",
+            //     "2",
+            //     "3"
+            //   ],
             //   "enableAutoScaling": "[parameters('kubernetes_mainAgentPool_enableAutoScaling')]",
             //   "maxCount": "[parameters('kubernetes_mainAgentPool_maxCount')]",
             //   "minCount": "[parameters('kubernetes_mainAgentPool_minCount')]",
             //   "maxPods": "[parameters('kubernetes_mainAgentPool_maxPods')]",
-            //   "type": "VirtualMachineScaleSets",
             //   "osDiskSizeGB": "[parameters('kubernetes_mainAgentPool_osDiskSizeGB')]",
             //   "osType": "[parameters('kubernetes_mainAgentPool_osType')]",
             //   "scaleSetEvictionPolicy": "Delete",
